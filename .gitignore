@@ -26,8 +26,6 @@ feiqixing/android_res
 feiqixing/frameworks/runtime-src/proj.ios_mac/feiqixing.xcodeproj/
 feiqixing/frameworks/runtime-src/proj.ios_mac/feiqixing.xcodeproj/project.xcworkspace/xcuserdata/user.xcuserdatad/
 gen/
-encrypt/
-feiqixing/frameworks/AnySDK_Framework_Java/
 *.pyc
 dummy.plist
 feiqixing/frameworks/runtime-src/RemoteSystemsTempFiles/
