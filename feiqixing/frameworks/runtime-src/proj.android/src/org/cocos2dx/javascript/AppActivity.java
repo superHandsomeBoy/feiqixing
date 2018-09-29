@@ -26,9 +26,10 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.javascript;
 
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.cocos2dx.javascript.DeviceSearcher.DeviceBean;
@@ -52,31 +53,29 @@ public class AppActivity extends Cocos2dxActivity {
         return glSurfaceView;
     }
     
-    // 主机——demo核心代码
+    // 主机——demo核心代码 (加入)
     private ArrayList<DeviceBean> mDeviceList = new ArrayList<DeviceBean>();
     public static void searchDevices() {
     	app.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-        				 new DeviceSearcher() {
-        			            @Override
-        			            public void onSearchStart() {
-        			                startSearch(); // 主要用于在UI上展示正在搜索
-        			            }
+                 new DeviceSearcher() {
+                        @Override
+                        public void onSearchStart() {
+                            startSearch(); // 主要用于在UI上展示正在搜索
+                        }
 
-        			            @Override
-        			            public void onSearchFinish(Set deviceSet) {
-        			                endSearch(); // 结束UI上的正在搜索
-        			                
-        			                app.mDeviceList.clear();
-        			                app.mDeviceList.addAll(deviceSet);
-        			                //mHandler.sendEmptyMessage(0); // 在UI上更新设备列表
-        			            }
-        			        }.start();
+                        @Override
+                        public void onSearchFinish(Set deviceSet) {
+                            endSearch(); // 结束UI上的正在搜索
+
+                            app.mDeviceList.clear();
+                            app.mDeviceList.addAll(deviceSet);
+                            //mHandler.sendEmptyMessage(0); // 在UI上更新设备列表
+                        }
+                 }.start();
             }
         });
-    	
-       
     }
     
     private static void startSearch() {
@@ -87,21 +86,36 @@ public class AppActivity extends Cocos2dxActivity {
     	Log.i(TAG, "结束搜索");
     }
     
-    // 设备——demo核心代码
+    // 设备——demo核心代码 (创建)
     public static void waitSearch() {
     	 app.runOnUiThread(new Runnable() {
              @Override
              public void run() {
-         				new DeviceWaitingSearch(app, "日灯光", "客厅"){
-         		            @Override
-         		            public void onDeviceSearched(InetSocketAddress socketAddr) {
-         		                //pushMsgToMain("已上线，搜索主机：" + socketAddr.getAddress().getHostAddress() + ":" + socketAddr.getPort());
-         		            	Log.i(TAG, "已上线，搜索主机：" + socketAddr.getAddress().getHostAddress() + ":" + socketAddr.getPort());
-         		            }
-         		        }.start();
+                new DeviceWaitingSearch(app, "日灯光", "客厅"){
+                    @Override
+                    public void onDeviceSearched(InetSocketAddress socketAddr) {
+                        //pushMsgToMain("已上线，搜索主机：" + socketAddr.getAddress().getHostAddress() + ":" + socketAddr.getPort());
+                        Log.i(TAG, "已上线，搜索主机：" + socketAddr.getAddress().getHostAddress() + ":" + socketAddr.getPort());
+                    }
+                }.start();
              }
          });
-    	 
-        
     }
+    
+//    private void ClientrecMsg(Chessman c) {
+//    	try {  
+//    		//Socket socket = new Socket(ip, port);  
+//    		//建立输入流  
+//    		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());   
+//    		//输入对象, 一定要flush
+//    		oos.writeObject(c);
+//    		oos.flush();        
+//    		oos.close();  
+//    		//socket.close();  
+//    	} 
+//    	catch (UnknownHostException e) {  
+//    		e.printStackTrace();
+//    	}
+//    }
+
 }

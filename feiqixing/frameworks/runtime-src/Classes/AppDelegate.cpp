@@ -69,9 +69,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if(CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-        glview = cocos2d::GLViewImpl::create("wifi");
+        glview = cocos2d::GLViewImpl::create("feiqixing");
 #else
-        glview = cocos2d::GLViewImpl::createWithRect("wifi", Rect(0,0,960,640));
+        glview = cocos2d::GLViewImpl::createWithRect("feiqixing", Rect(0,0,960,640));
 #endif
         director->setOpenGLView(glview);
 }

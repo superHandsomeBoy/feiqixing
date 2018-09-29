@@ -20,7 +20,7 @@ public abstract class DeviceWaitingSearch extends Thread {
     private final String TAG = DeviceWaitingSearch.class.getSimpleName();
 
     private static final int DEVICE_FIND_PORT = 9000;
-    private static final int RECEIVE_TIME_OUT = 1500; // 接收超时时间，应小于等于主机的超时时间1500
+    private static final int RECEIVE_TIME_OUT = 15000; // 接收超时时间，应小于等于主机的超时时间1500
     private static final int RESPONSE_DEVICE_MAX = 200; // 响应设备的最大个数，防止UDP广播攻击
 
     private static final byte PACKET_TYPE_FIND_DEVICE_REQ_10 = 0x10; // 搜索请求
@@ -43,6 +43,8 @@ public abstract class DeviceWaitingSearch extends Thread {
     public void run() {
         DatagramSocket socket = null;
         try {
+        	Log.i(TAG, "本机IP" + getOwnWifiIP());
+
             socket = new DatagramSocket(DEVICE_FIND_PORT);
             byte[] data = new byte[1024];
             DatagramPacket pack = new DatagramPacket(data, data.length);
@@ -59,7 +61,7 @@ public abstract class DeviceWaitingSearch extends Thread {
                     try {
                         socket.receive(pack);
                         if (verifyCheckData(pack)) {
-                            Log.i(TAG, "@@@zjun: 确认成功");
+                            Log.i(TAG, "@@@zjun: 确认成功");//pack.getAddress().getHostAddress();
                             onDeviceSearched((InetSocketAddress) pack.getSocketAddress());
                             break;
                         }
