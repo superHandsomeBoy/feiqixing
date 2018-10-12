@@ -48,12 +48,16 @@ var CreateRoom = BaseLayer.extend({
     },
 
     onStart: function () {
-        EnterScene.instance.removeAllChildren();
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "onStartGame", "()V");
+    },
 
+    startGame: function () {
         var arr = [];
         for(var i = 0; i < this._layers.length; i++) {
             arr[i] = this._layers[i].ip;
         }
+
+        EnterScene.instance.removeAllChildren();
 
         var layer = new MainLayer();
         cc.director.getRunningScene().addChild(layer, 10);

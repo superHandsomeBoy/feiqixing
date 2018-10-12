@@ -183,6 +183,82 @@ public class AppActivity extends Cocos2dxActivity {
             }
     	});
     }
+    
+    // 开始游戏
+    public static void onStartGame() {
+    	app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	client.sendToServer("04");
+            }
+    	});
+    }
+    
+    public void startGame() {
+    	app.runOnGLThread(new Runnable() {
+ 			@Override
+ 			public void run() {
+ 				 Cocos2dxJavascriptJavaBridge.evalString("EnterScene.instance.startGame()");
+ 			}
+ 		});
+    }
+    
+    public void showNowPlayer(final String ip) {
+    	app.runOnGLThread(new Runnable() {
+ 			@Override
+ 			public void run() {
+ 				 Cocos2dxJavascriptJavaBridge.evalString("EventDispatcher.shared().dispatchEvent('startMoveIp', '"+ ip +"')");
+ 			}
+ 		});
+    }
+    
+    // 开始甩筛子
+    public static void startSezi() {
+    	app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	client.sendToServer("06");
+            }
+    	});
+    }
+    
+    public void showStep(final String num) {
+    	app.runOnGLThread(new Runnable() {
+ 			@Override
+ 			public void run() {
+ 				Cocos2dxJavascriptJavaBridge.evalString("EventDispatcher.shared().dispatchEvent('yaoSeZi', '"+ num +"')");
+ 			}
+ 		});
+    }
+
+    // 选择行走棋子
+    public static void sendTargetQizi(final String num) {
+    	app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	client.sendToServer("07" + num);
+            }
+    	});
+    }
+    
+    public void moveSeZiOpp(final String num) {
+    	app.runOnGLThread(new Runnable() {
+ 			@Override
+ 			public void run() {
+ 				Cocos2dxJavascriptJavaBridge.evalString("EventDispatcher.shared().dispatchEvent('moveSeZiOpp', '"+ num +"')");
+ 			}
+ 		});
+    }
+
+    // 行走结束
+    public static void sendTargetMoveEnd() {
+    	app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	client.sendToServer("08");
+            }
+    	});
+    }
 
     /**
      * 获取本机在Wifi中的IP

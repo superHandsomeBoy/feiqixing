@@ -15,7 +15,11 @@ public class MainServer {
 	private Socket socket;
     private String _serverIp;
     private ArrayList<String> _allIps = new ArrayList<String>();
+    private ArrayList<String> _allPlayers = new ArrayList<String>();
     private ArrayList<PrintWriter> pWriters = new ArrayList<PrintWriter>();
+    
+    private Boolean isStart = false;	// 开始游戏
+    private int indexNow = 0;
 	
 	public MainServer(String ip) {
 		app = this;
@@ -95,6 +99,31 @@ public class MainServer {
     		pWriters.get(i).flush();
         }
     }
+
+    // 发送 更新房间人员
+    public void updateSendIps() {
+    	String ips = "";
+    	int len = _allIps.size();
+    	for(int i = 0; i < len; i++) {
+    		ips += _allIps.get(i);
+    		if (i < len - 1) {
+    			ips += ",";
+    		}
+    	}
+    	
+    	sendToCilent("02" + ips);
+    };
+    
+    // 显示当前行动者
+    private void showNowPlayer() {
+    	String ip = _allPlayers.get(indexNow);
+    	if (ip.isEmpty()) {
+    		indexNow = 0;
+    		ip = _allPlayers.get(indexNow);
+    	}
+    	
+    	sendToCilent("05" + ip);
+    }
 	
 	// 解析收到的消息
 	private void checkMessage(String msg) {
@@ -108,6 +137,11 @@ public class MainServer {
 //    	System.out.println("str: " + str);
 
     	if (type.equals("01")) {		// 添加成员
+    		if (isStart) {
+    			System.out.println("Game is Start...");
+    			return;
+    		}
+    		
     		for(int i = 0; i < _allIps.size(); i++) {
 				if (_allIps.get(i).isEmpty()) {
 					_allIps.set(i, str);
@@ -128,20 +162,50 @@ public class MainServer {
 				}
 			}
         	app.updateSendIps();
+        	
+    	} else if (type.equals("04")) {		// 开始游戏
+    		sendToCilent("04");
+    		
+    		isStart = true;
+    		
+    		// 排序 0 2 3 1
+    		if (!_allIps.get(0).isEmpty()) {
+    			_allPlayers.add(_allIps.get(0));
+    		}
+    		if (!_allIps.get(2).isEmpty()) {
+    			_allPlayers.add(_allIps.get(2));
+    		}
+    		if (!_allIps.get(3).isEmpty()) {
+    			_allPlayers.add(_allIps.get(3));
+    		}
+    		if (!_allIps.get(1).isEmpty()) {
+    			_allPlayers.add(_allIps.get(1));
+    		}
+    		
+    		try {
+				Thread.sleep(50);
+				showNowPlayer();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+    		
+    	} else if (type.equals("06")) {		// 开始甩筛子
+    		int num = (int) Math.floor(Math.random() * 6) + 1;
+    		sendToCilent("06" + num);
+    		
+    		if (num != 6) {
+	    		indexNow++;
+	    		
+    			String ip = _allPlayers.get(indexNow);
+    	    	if (ip.isEmpty()) {
+    	    		indexNow = 0;
+    	    	}
+    		}
+    		
+    	} else if (type.equals("07")) {		// 选择行走棋子
+    		sendToCilent("07" + str);
+    	} else if (type.equals("08")) {		// 行走结束
+    		showNowPlayer();
     	}
 	}
-
-    // 发送 更新房间人员
-    public void updateSendIps() {
-    	String ips = "";
-    	int len = _allIps.size();
-    	for(int i = 0; i < len; i++) {
-    		ips += _allIps.get(i);
-    		if (i < len - 1) {
-    			ips += ",";
-    		}
-    	}
-    	
-    	sendToCilent("02" + ips);
-    };
 }

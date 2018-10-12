@@ -71,6 +71,11 @@ public class MainClient {
     	pWriter.println(str);
     	pWriter.flush();
     }
+
+    // 加入服务器
+    private void joinServer() {
+    	sendToServer("01" + AppActivity.myIp);
+    }
 	
 	// 解析收到的消息
 	private void checkMessage(String msg) {
@@ -83,13 +88,17 @@ public class MainClient {
 //    	System.out.println("type: " + type);
 //    	System.out.println("str: " + str);
     	
-    	if (type.equals("02")) {		// 更新房间成员
+    	if (type.equals("02")) {				// 更新房间成员
     		AppActivity.app.updateIps(str);
+    		
+    	} else if (type.equals("04")) {		// 开始游戏
+    		AppActivity.app.startGame();
+    	} else if (type.equals("05")) {		// 显示当前行动者
+    		AppActivity.app.showNowPlayer(str);
+    	} else if (type.equals("06")) {		// 步数
+    		AppActivity.app.showStep(str);
+    	} else if (type.equals("07")) {		// 选择行走棋子
+    		AppActivity.app.moveSeZiOpp(str);
     	}
 	}
-    
-    // 加入服务器
-    private void joinServer() {
-    	sendToServer("01" + AppActivity.myIp);
-    }
 }
