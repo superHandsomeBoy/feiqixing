@@ -29,7 +29,7 @@ var CreateRoom = BaseLayer.extend({
         var px = WINSIZE.width / 2 - gap - ww;
         var py = WINSIZE.height / 2 + gap;
         var index = 0;
-        var colors = [cc.color(255, 0, 0, 200), cc.color(0, 255, 0, 200), cc.color(0, 0, 255, 200), cc.color(255, 255, 0, 200)];
+        var colors = [cc.color.GREEN, cc.color.BLUE, cc.color.RED, cc.color.YELLOW];
 
         for(var i = 0; i < 2; i++) {
             for(var j = 0; j < 2; j++) {
@@ -48,7 +48,17 @@ var CreateRoom = BaseLayer.extend({
     },
 
     onStart: function () {
+        EnterScene.instance.removeAllChildren();
 
+        var arr = [];
+        for(var i = 0; i < this._layers.length; i++) {
+            arr[i] = this._layers[i].ip;
+        }
+
+        var layer = new MainLayer();
+        cc.director.getRunningScene().addChild(layer, 10);
+
+        layer.joinPlay(arr);
     },
 
     updateRoom: function (ips) {

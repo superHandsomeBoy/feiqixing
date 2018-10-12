@@ -38,8 +38,6 @@ var MainLayer = cc.Node.extend({
     ctor:function () {
         this._super();
 
-        WINSIZE = cc.winSize;
-
         MainLayer.instance = this;
 
         this._gameStatu = EventCost.Game_State.star;
@@ -47,6 +45,7 @@ var MainLayer = cc.Node.extend({
         this._timeEnd = 10;
         this._dicesAni = false;
         this._allQizi = {};
+        this._allColor = {};
         this._nowMoveKey = "red";
         this._diceNum = 0;
         this.initMap();
@@ -63,8 +62,6 @@ var MainLayer = cc.Node.extend({
 
         this.initSezi();
         this.initTouchIfon();
-
-        this.joinPlay();
 
         EventDispatcher.shared().addListener("testmove", function (cmd, data) {
             // 检查游戏是否结束
@@ -89,33 +86,32 @@ var MainLayer = cc.Node.extend({
         }, this);
     },
 
-    joinPlay:function(){
+    joinPlay:function(arr){
 
-        var list = [EventCost.greenInfo, EventCost.redInfo, EventCost.yellowInfo, EventCost.blueInfo];
-        var endList = [];
-        for(var j = 0; j < list.length; j++){
-            if(this._allColor[list[j].color]){
+        var list = [EventCost.greenInfo, EventCost.blueInfo, EventCost.redInfo, EventCost.yellowInfo];
+        var myColor = null;
+
+        for(var j = 0; j < 4; j++) {
+            if (!arr[j])
                 continue;
-            }
-            endList.push(list[j]);
-        }
 
-        list = endList;
-        var num = Math.floor(Math.random() * list.length);
-        var info = list[num];
-        if(!this._allQizi[info.color]){
+            var info = list[j];
             this._allQizi[info.color] = {};
+            this._allColor[info.color] = 1;
+
+            for(var i = 0; i < EventCost.QiziNums; i++){
+                var qizi = new Qizi(info, i + 1);
+                this._mapNode.addChild(qizi, 2);
+
+                this._allQizi[info.color][qizi.getIndex()] = qizi;
+            }
+
+            if (arr[j] == EnterScene.instance.myIp) {
+                myColor = info.color;
+            }
         }
 
-        this._allColor[info.color] = 1;
-        // gamePlayer.initPlayer(info.color, 1);
-
-        for(var i = 0; i < EventCost.QiziNums; i++){
-            var qizi = new Qizi(info, i + 1);
-            this._mapNode.addChild(qizi, 2);
-
-            this._allQizi[info.color][qizi.getIndex()] = qizi;
-        }
+        gamePlayer.initPlayer(myColor, EnterScene.instance.myIp);
     },
 
     initSezi:function(){
