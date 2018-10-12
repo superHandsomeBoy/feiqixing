@@ -67,7 +67,7 @@ var MainLayer = cc.Node.extend({
         this.initTouchIfon();
 
         // 指定颜色操作
-        EventDispatcher.shared().addListener(SVRCMD.moveopp, function (cmd, data) {
+        EventDispatcher.shared().addListener(SVRCMD.moveSeZiOpp, function (cmd, data) {
             var str = data.split(",");
 
             var ip    = str[0];
@@ -116,13 +116,13 @@ var MainLayer = cc.Node.extend({
         var index = obj.getIndex();
 
         var str = ip + "," + num + "," + index;
-        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sentTargetQizi", "(Ljava/lang/String;)V", str);
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetQizi", "(Ljava/lang/String;)V", str);
     },
 
     // 发送移动结束
     send_moveEnd:function(){
         var ip = gamePlayer.playerId;
-        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sentTargetMove", "(Ljava/lang/String;)V", ip);
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetMoveEnd", "(Ljava/lang/String;)V", ip);
     },
 
     joinPlay:function(arr){
