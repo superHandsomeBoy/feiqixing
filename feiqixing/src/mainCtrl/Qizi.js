@@ -76,17 +76,13 @@ var Qizi = ccui.Button.extend({
     },
 
     doOpp: function (sender) {
+        MainScene.instance.send_targetQizi(this);
+
+        return;
         // 是否可操作
         if(!this._isDoIt){
             return;
         }
-
-        // 如果是在飞机场上，则出来
-        if(this._statu == EventCost.QiziStatu.BIRTH && MainLayer.instance.isBirthNum()){
-            this.initBirth();
-            return;
-        }
-        this.checkIsCanMove(MainLayer.instance._diceNum, false);
     },
 
     // 出发点
@@ -99,6 +95,12 @@ var Qizi = ccui.Button.extend({
     },
 
     checkIsCanMove:function(num, isBack){
+        // 如果是在飞机场上，则出来
+        if(this._statu == EventCost.QiziStatu.BIRTH && MainLayer.instance.isBirthNum()){
+            this.initBirth();
+            return;
+        }
+
         if(this._statu != EventCost.QiziStatu.WAIT){
             var msg = "";
             if(this._statu == EventCost.QiziStatu.END){
@@ -223,6 +225,8 @@ var Qizi = ccui.Button.extend({
         }else{
             this.setQiziStatu(EventCost.QiziStatu.WAIT);
             MainLayer.instance.showRoll();
+
+            MainScene.instance.send_moveEnd();
         }
     },
 

@@ -3,5 +3,7 @@
  */
 
 var SVRCMD = {
-    moveopp : "moveopp"
+    moveSeZiOpp : "moveSeZiOpp",    // 移动色字
+    yaoSeZi: "yaoSeZi",             // 摇色字
+    startMoveIp: "startMoveIp"      // 开始游戏时，优先走的玩家ip
 };
