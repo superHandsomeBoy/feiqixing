@@ -20,7 +20,7 @@ public abstract class DeviceWaitingSearch extends Thread {
     private final String TAG = DeviceWaitingSearch.class.getSimpleName();
 
     private static final int DEVICE_FIND_PORT = 9000;
-    private static final int RECEIVE_TIME_OUT = 15000; // 接收超时时间，应小于等于主机的超时时间1500
+    private static final int RECEIVE_TIME_OUT = 1500; // 接收超时时间，应小于等于主机的超时时间1500
     private static final int RESPONSE_DEVICE_MAX = 200; // 响应设备的最大个数，防止UDP广播攻击
 
     private static final byte PACKET_TYPE_FIND_DEVICE_REQ_10 = 0x10; // 搜索请求
@@ -49,7 +49,7 @@ public abstract class DeviceWaitingSearch extends Thread {
             byte[] data = new byte[1024];
             DatagramPacket pack = new DatagramPacket(data, data.length);
             while (true) {
-                // 等待主机的搜索
+                // 等待搜索
                 socket.receive(pack);
                 if (verifySearchData(pack)) {
                     byte[] sendData = packData();
@@ -61,13 +61,14 @@ public abstract class DeviceWaitingSearch extends Thread {
                     try {
                         socket.receive(pack);
                         if (verifyCheckData(pack)) {
-                            Log.i(TAG, "@@@zjun: 确认成功");//pack.getAddress().getHostAddress();
+                            Log.i(TAG, "@@@zjun: 确认成功 " + pack.getAddress().getHostAddress());
                             onDeviceSearched((InetSocketAddress) pack.getSocketAddress());
                             break;
                         }
                     } catch (SocketTimeoutException e) {
                     }
-                    socket.setSoTimeout(0); // 连接超时还原成无穷大，阻塞式接收
+//                    socket.setSoTimeout(0); // 连接超时还原成无穷大，阻塞式接收
+                    socket.close();
                 }
             }
         } catch (IOException e) {
@@ -75,6 +76,7 @@ public abstract class DeviceWaitingSearch extends Thread {
         } finally {
             if (socket != null) {
                 socket.close();
+                System.out.println("server socket close....0");
             }
         }
     }

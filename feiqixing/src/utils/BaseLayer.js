@@ -5,8 +5,7 @@
 var BaseLayer = cc.Layer.extend({
 
     bgTouch: false,     // 点击背景是否关闭界面
-    onEase: true,       // 是否要缓动
-    onEase2: false,       // 是否要缓动(二级界面效果)
+    onEase: false,       // 是否要缓动
     resources: null,    // 要加载的资源
     releaseResNow: true,
 
@@ -25,21 +24,18 @@ var BaseLayer = cc.Layer.extend({
         this._resPlist = [];
         this._winsizie = cc.winSize;
         this._addResEnd = false;
-        this.onEase = true;
-        this.onEase2 = false;
+        this.onEase = false;
         this.releaseResNow = true;
         this._closeFunc = null;
         this.swallowToucheEventCallback = null;
         this.setContentSize(this._winsizie);
         this.addMark();
-
-        GuideUIMoving = true;
     },
 
     onEnter: function () {
         this._super();
 
-        if (this._bgLayer && this.onEase && this.onEase2) {
+        if (this._bgLayer && this.onEase) {
             this._bgLayer.setOpacity(0);
         }
 
@@ -138,34 +134,21 @@ var BaseLayer = cc.Layer.extend({
     showEase: function () {
         this.setCascadeOpacityEnabled(true);
 
-        if (!this.onEase2) {
-            this.setScale(0.7);
-            this.setOpacity(255);
-            var scale = cc.scaleTo(0.15, 1);
-            var fade = cc.fadeIn(0.15);
-            var fun = cc.callFunc(this.setUIMoveEnd, this);
+        this.setScale(0.5);
+        this.setOpacity(255);
+        var scale = cc.scaleTo(0.12, 1.1);
+        var scale2 = cc.scaleTo(0.05, 1);
+        var fun = cc.callFunc(this.setUIMoveEnd, this);
+        this.runAction(cc.sequence(scale, scale2, fun));
 
-            this.runAction(cc.sequence(cc.spawn(scale, fade), fun));
-        } else {
-            this.setScale(0.5);
-            this.setOpacity(255);
-            var scale = cc.scaleTo(0.12, 1.1);
-            var fade = cc.fadeIn(0.17);
-            var scale2 = cc.scaleTo(0.05, 1);
-            var fun = cc.callFunc(this.setUIMoveEnd, this);
-
-            // this.runAction(cc.sequence(cc.spawn(scale, fade), scale2, fun));
-            this.runAction(cc.sequence(scale, scale2, fun));
-
-            if (this._bgLayer) {
-                this._bgLayer.setOpacity(0);
-                this._bgLayer.runAction(cc.fadeTo(0.17, 165));
-            }
+        if (this._bgLayer) {
+            this._bgLayer.setOpacity(0);
+            this._bgLayer.runAction(cc.fadeTo(0.17, 185));
         }
     },
 
     setUIMoveEnd: function () {
-        GuideUIMoving = false;
+        // GuideUIMoving = false;
     },
 
     // 设置灰背景
@@ -179,73 +162,22 @@ var BaseLayer = cc.Layer.extend({
     },
 
     onClose: function () {
-        if (this.onEase && this.onEase2) {
-            var scale = cc.scaleTo(0.1, 0.5);
-            var fade = cc.fadeOut(0.1);
-            var fun = cc.callFunc(this.onCloseEase, this);
-
-            this.runAction(cc.sequence(cc.spawn(scale, fade), fun));
-        } else {
-            this.onCloseEase();
-        }
-    },
-
-    onCloseEase: function () {
-        if (MapWorld.instance) {
-            MapWorld.instance.setCameraVisible(true);
-        }
         if (this._closeFunc) {
             this._closeFunc.call();
         }
         this.removeFromParent(true);
-        //SoundManager.playEffect(res.btn_flip);
     },
 
     setCloseFunc:function (func) {
        this._closeFunc =  func;
     },
 
-    isContinue:function () {
-        if(Cache.skillViewHasExist || Cache.heroViewHasExist || Cache.zhaomuViewHasExist || Cache.outsiteViewHasExist
-            || Cache.xiaochangViewHasExist){
-            return true;
-        }
-        return false;
-    },
-
     onExit: function () {
-        EventDispatcher.shared().removeListenerByDelgate(this);
-        var children = this.getChildren();
-        for (var i in children) {
-            EventDispatcher.shared().removeListenerByDelgate(children[i]);
-        }
-
-        TouchTips.removeTouchTips();
-
-        // if (!this.releaseResNow) {
-        //     this._super();
-        //     return;
-        // }
-        // if(Cache.skillViewHasExist || Cache.heroViewHasExist || Cache.zhaomuViewHasExist || Cache.outsiteViewHasExist){
-        //     this._super();
-        //         return;
-        // }
-
         for (var k in this._resPlist) {
-            if(this._resPlist[k].indexOf("cardlist_mid") >= 0){
-                if(this.isContinue()){
-                    continue;
-                }
-            }
             cc.spriteFrameCache.removeSpriteFramesFromFile(this._resPlist[k]);
             cc.loader.release(this._resPlist[k]);
         }
         for (var j in this._resPngs) {
-            if(this._resPngs[j].indexOf("cardlist_mid") >= 0){
-                if(this.isContinue()){
-                    continue;
-                }
-            }
             cc.textureCache.removeTextureForKey(this._resPngs[j]);
             cc.loader.release(this._resPngs[j]);
         }

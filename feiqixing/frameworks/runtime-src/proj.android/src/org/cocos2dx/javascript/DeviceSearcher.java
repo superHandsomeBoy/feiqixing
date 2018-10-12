@@ -19,7 +19,7 @@ public abstract class DeviceSearcher extends Thread {
     private static final String TAG = DeviceSearcher.class.getSimpleName();
 
     private static final int DEVICE_FIND_PORT = 9000;
-    private static final int RECEIVE_TIME_OUT = 15000; // 接收超时时间
+    private static final int RECEIVE_TIME_OUT = 1500; // 接收超时时间
     private static final int RESPONSE_DEVICE_MAX = 200; // 响应设备的最大个数，防止UDP广播攻击
 
     private static final byte PACKET_TYPE_FIND_DEVICE_REQ_10 = 0x10; // 搜索请求
@@ -51,7 +51,7 @@ public abstract class DeviceSearcher extends Thread {
             InetAddress broadIP = InetAddress.getByName("255.255.255.255");
             DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, broadIP, DEVICE_FIND_PORT);
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 2; i++) {
                 // 发送搜索广播
                 mPackType = PACKET_TYPE_FIND_DEVICE_REQ_10;
                 sendPack.setData(packData(i + 1));
@@ -69,7 +69,7 @@ public abstract class DeviceSearcher extends Thread {
                         if (recePack.getLength() > 0) {
                             mDeviceIP = recePack.getAddress().getHostAddress();
                             if (parsePack(recePack)) {
-                                Log.i(TAG, "@@@zjun: 设备上线：" + mDeviceIP);
+                                Log.i(TAG, "房间IP：" + mDeviceIP);
                                 // 发送一对一的确认信息。使用接收报，因为接收报中有对方的实际IP，发送报时广播IP
                                 mPackType = PACKET_TYPE_FIND_DEVICE_CHK_12;
                                 recePack.setData(packData(rspCount)); // 注意：设置数据的同时，把recePack.getLength()也改变了
@@ -79,9 +79,12 @@ public abstract class DeviceSearcher extends Thread {
                     }
                 } catch (SocketTimeoutException e) {
                 }
-                Log.i(TAG, "@@@zjun: 结束搜索" + i);
+                Log.i(TAG, "结束搜索" + i);
             }
             onSearchFinish(mDeviceSet);
+            if (hostSocket != null) {
+                hostSocket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

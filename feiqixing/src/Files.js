@@ -8,6 +8,9 @@ var jsFiles = [
     "src/utils/BaseLayer.js",
     "src/utils/Confirm.js",
     "src/utils/Loading.js",
-    "src/utils/NumUnit.js"
+    "src/utils/NumUnit.js",
+
+    "src/room/CreateRoom.js",
+    "src/room/SearchRoom.js"
 
 ];

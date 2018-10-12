@@ -822,254 +822,19 @@ NumUnit.initScale9Sprite = function (xx, yy, wid, hei, parentContent, type, inde
 
     var img = null;
     switch (type) {
-        case Scale9.SCALE_1:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("dg.png", cc.rect(20, 20, 65, 120));
-            break;
-        case Scale9.SCALE_2:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("erji_bg3.png", cc.rect(110, 0, 330, 46));
-            break;
-        case Scale9.SCALE_3:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("kjjk.png", cc.rect(5, 5, 30, 30));
-            break;
-        case Scale9.SCALE_4:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("kuang_tips.png", cc.rect(5, 5, 30, 30));
-            break;
-        case Scale9.SCALE_7:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_tips.png", cc.rect(30, 20, 310, 10));
-            break;
-        case Scale9.SCALE_8:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("guanzhi_bg5.png", cc.rect(15, 15, 10, 10));
-            break;
-        case Scale9.SCALE_9:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_kuang.png", cc.rect(15, 120, 550, 50));
-            break;
-        case Scale9.SCALE_10:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("science_lv_bg.png", cc.rect(26, 27, 10, 10));
-            break;
-        case Scale9.SCALE_11:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("guojia_bg1.png", cc.rect(16, 20, 10, 10));
-            break;
-        case Scale9.SCALE_12:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("guojia_bg4.png", cc.rect(20, 20, 10, 10));
-            break;
-        case Scale9.SCALE_13:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("xuanzhongkuang_1.png", cc.rect(22, 22, 5, 5));
-            break;
-        case Scale9.SCALE_14:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("xuanzhong_kuang_1.png", cc.rect(40, 40, 10, 10));
-            break;
-        case Scale9.SCALE_15:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_0012_all_dikuang.png", cc.rect(10, 10, 80, 80));
-            break;
-        case Scale9.SCALE_16:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg_tc_1.png", cc.rect(20, 20, 5, 5));
-            break;
-        case Scale9.SCALE_17:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("yingying_bg.png", cc.rect(190, 190, 300, 240));
-            break;
-        case Scale9.SCALE_18:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_04.png", cc.rect(2, 2, 18, 18));
-            break;
-        case Scale9.SCALE_19:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg7.png", cc.rect(10, 10, 140, 65));
-            break;
-        case Scale9.SCALE_20:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg3.png", cc.rect(6, 6, 16, 16));
-            break;
-        case Scale9.SCALE_21:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("report_di.png", cc.rect(10, 10, 80, 10));
-            break;
-        case Scale9.SCALE_22:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("btn_di_4.png", cc.rect(10, 10, 120, 25));
-            break;
-        case Scale9.SCALE_23:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg1.png", cc.rect(40, 5, 110, 40));
-            break;
-        case Scale9.SCALE_24:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg5.png", cc.rect(15, 20, 20, 30));
-            break;
-        case Scale9.SCALE_25:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("chuzheng_3.png", cc.rect(20, 35, 20, 8));
-            break;
-        case Scale9.SCALE_27:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg_di_001.png", cc.rect(20, 20, 220, 100));
-            break;
-        case Scale9.SCALE_29:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_x_002.png", cc.rect(10, 10, 20, 20));
-            break;
-        case Scale9.SCALE_30:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_0029.png", cc.rect(160, 0, 140, 33));
-            break;
-        case Scale9.SCALE_31:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("kuang_001.png", cc.rect(8, 8, 16, 16));
-            break;
-        case Scale9.SCALE_32:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("kuang_003.png", cc.rect(8, 8, 16, 16));
-            break;
-        case Scale9.SCALE_33:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("rank_jin_di.png", cc.rect(0, 10, 12, 40));
-            break;
-        case Scale9.SCALE_34:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg_001.png", cc.rect(10, 10, 260, 110));
-            break;
-        case Scale9.SCALE_36:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("cardlevelup_2.png", cc.rect(200, 40, 200, 20));
-            break;
-        case Scale9.SCALE_37:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("cardlevelup_3.png", cc.rect(280, 20, 200, 20));
-            break;
-        case Scale9.SCALE_39:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("guide_0009.png", cc.rect(16, 16, 18, 18));
-            break;
-        case Scale9.SCALE_40:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("carmovebg.png", cc.rect(20, 20, 70, 180));
-            break;
-        case Scale9.SCALE_41:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_x_di.png", cc.rect(10, 10, 10, 10));
-            break;
-        case Scale9.SCALE_53:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_1008.png", cc.rect(10, 50, 120, 100));
-            break;
-        case Scale9.SCALE_57:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_02.png", cc.rect(5, 5, 30, 30));
-            break;
-        case Scale9.SCALE_58:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_03.png", cc.rect(25, 25, 14, 16));
-            break;
-        case Scale9.SCALE_59:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_1016.png", cc.rect(30, 30, 70, 70));
-            break;
-        case Scale9.SCALE_60:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("ui_ty_005.png", cc.rect(5, 4, 87, 20));
-            break;
-        case Scale9.SCALE_61:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("erji_bg1.png", cc.rect(25, 25, 90, 90));
-            break;
-        case Scale9.SCALE_63:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("kuang_08.png", cc.rect(10, 10, 30, 30));
-            break;
-        case Scale9.SCALE_64:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("chat_9.png", cc.rect(27, 29, 184, 8));
-            break;
-        case Scale9.SCALE_65:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("chat_bg_01.png", cc.rect(10, 3, 18, 3));
-            break;
-        case Scale9.SCALE_66:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("chat_bg_02.png", cc.rect(27, 3, 18, 3));
-            break;
-        case Scale9.SCALE_67:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_x_lin.png", cc.rect(10, 10, 20, 20));
-            break;
-        case Scale9.SCALE_68:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("union_05.png", cc.rect(20, 65, 140, 35));
-            break;
-        case Scale9.SCALE_69:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_x_6.png", cc.rect(10, 10, 22, 22));
-            break;
-        case Scale9.SCALE_73:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("workshop_32.png", cc.rect(50, 50, 20, 20));
-            break;
-        case Scale9.SCALE_76:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("enter_0019.png", cc.rect(80, 80, 20, 20));
-            break;
-        case Scale9.SCALE_77:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("heishi_bg.png", cc.rect(5, 5, 22, 22));
-            break;
-        case Scale9.SCALE_78:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("heishi_bg2.png", cc.rect(10, 5, 27, 470));
-            break;
-        case Scale9.SCALE_79:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("paihangshi_bg2.png", cc.rect(15, 200, 15, 200));
-            break;
-        case Scale9.SCALE_80:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("touming_bg1.png", cc.rect(100, 0, 100, 0));
-            break;
-        case Scale9.SCALE_81:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("huodong_bg.png", cc.rect(5, 5, 22, 22));
-            break;
-        case Scale9.SCALE_82:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("erji_bg1.png", cc.rect(25, 25, 90, 90));
-            break;
-        case Scale9.SCALE_83:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("erji_bg2.png", cc.rect(32, 4, 319, 40));
-            break;
-        case Scale9.SCALE_84:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("renwu_bg1.png", cc.rect(50, 5, 50, 5));
-            break;
-        case Scale9.SCALE_85:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("emoji-dik.png", cc.rect(4, 4, 91, 93));
-            break;
-        case Scale9.SCALE_86:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("wei_d.png", cc.rect(10,4,83,20));
-            break;
-        case Scale9.SCALE_87:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("shu_d.png", cc.rect(10,4,83,20));
-            break;
-        case Scale9.SCALE_88:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("wu_d.png", cc.rect(10,4,83,20));
-            break;
-        case Scale9.SCALE_89:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_t_01.png", cc.rect(10,10,326,50));
-            break;
-        case Scale9.SCALE_90:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("diban_t_02.png", cc.rect(10,10,348,98));
-            break;
-        case Scale9.SCALE_91:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg_tc_3.png", cc.rect(10,10,20,20));
-            break;
-        case Scale9.SCALE_92:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("new_bg_touming.png", cc.rect(10,10,412,32));
-            break;
-        case Scale9.SCALE_93:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("awuj01.png", cc.rect(5,5,10,10));
-            break;
-        case Scale9.SCALE_94:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("career_tips.png", cc.rect(40,40,190,66));
-            break;
-        case Scale9.SCALE_96:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("bg_tc_2.png", cc.rect(10,10,10,10));
-            break;
-        case Scale9.SCALE_97:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("tis.png", cc.rect(20,10,10,4));
-            break;
-        case Scale9.SCALE_98:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("dian_qipao.png", cc.rect(30,20,53,20));
-            break;
-        case Scale9.SCALE_99:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("new_bg_touming_1.png", cc.rect(182,20,30,20));
-            break;
-        case Scale9.SCALE_100:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("guanzhi_bg6.png", cc.rect(5,3,29,32));
-            break;
-        case Scale9.SCALE_101:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("qipa.png", cc.rect(27, 4, 184, 36));
-            break;
-
-        case Scale9.SCALE_103:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("heidi_bg1.png", cc.rect(69,8,100,10));
-            break;
-        case Scale9.SCALE_104:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("huodong_14.png", cc.rect(15,20,78,87));
-            break;
-        case Scale9.SCALE_105:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("huodong_18.png", cc.rect(6,7,80,80));
-            break;
-        case Scale9.SCALE_106:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("duori_6.png", cc.rect(0,0,55,55));
-            break;
-        case Scale9.SCALE_107:
-            img = cc.Scale9Sprite.createWithSpriteFrameName("shouchong_bg1.png", cc.rect(16,13,36,53));
+        case 1:
+            img = cc.Scale9Sprite.createWithSpriteFrameName("btn_di_20.png", cc.rect(0, 0, 44, 35));
             break;
         default :
-            img = cc.Scale9Sprite.create(res.aboard_touming, cc.rect(2, 2, 2, 2));
+            //img = cc.Scale9Sprite.create(res.aboard_touming, cc.rect(2, 2, 2, 2));
             cc.error("error: cc.Scale9Sprite type is no found....." + type);
             break;
     }
 
-    if (!img) {
-        img = cc.Scale9Sprite.create(res.aboard_touming, cc.rect(2, 2, 2, 2));
-        cc.error("error: cc.Scale9Sprite type is no found....." + type);
-    }
+    // if (!img) {
+    //     img = cc.Scale9Sprite.create(res.aboard_touming, cc.rect(2, 2, 2, 2));
+    //     cc.error("error: cc.Scale9Sprite type is no found....." + type);
+    // }
 
     img.width = wid;
     img.height = hei;
@@ -3068,7 +2833,7 @@ NumUnit.initToumingBtn = function (xx, yy, parent, width, height, callback, targ
         callbackEndFuc = null;
     }
 
-    var btn = NumUnit.initButtonUI(res.aboard_touming, res.aboard_touming, callback, targe, null, callback2, callbackEndFuc);
+    var btn = NumUnit.initButtonUI("res/aboard_touming.png", "res/aboard_touming.png", callback, targe, null, callback2, callbackEndFuc);
     btn.setScale9Enabled(true);
     btn.setCapInsets(cc.rect(1, 1, 3, 3));
     btn.setSize(cc.size(width, height));
