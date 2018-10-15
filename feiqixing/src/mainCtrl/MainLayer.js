@@ -18,8 +18,6 @@ var MainLayer = cc.Node.extend({
     // 棋子总信息
     _allQizi:null,
 
-    _allColor:null,
-
     // 游戏状态
     _gameStatu: null,
 
@@ -47,7 +45,6 @@ var MainLayer = cc.Node.extend({
         this._timeEnd = 10;
         this._dicesAni = false;
         this._allQizi = {};
-        this._allColor = {};
         this._allIp = {};
         this._nowMoveKey = "red";
         this._diceNum = 0;
@@ -132,7 +129,6 @@ var MainLayer = cc.Node.extend({
             this._allIp[arr[j]] = info.color;
 
             this._allQizi[info.color] = {};
-            this._allColor[info.color] = 1;
 
             for(var i = 0; i < EventCost.QiziNums; i++){
                 var qizi = new Qizi(info, i + 1);
