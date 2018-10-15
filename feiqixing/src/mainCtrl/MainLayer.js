@@ -124,7 +124,14 @@ var MainLayer = cc.Node.extend({
                     gamePlayer.isYao = false;
                 }
             }
-            if(data.length == Object.keys(this._allIp).length){
+            if(arr.length == Object.keys(this._allIp).length - 1){
+                for(var i = 0; i < arr.length; i++){
+                    if(!gamePlayer.rank){
+                        gamePlayer.rank = Object.keys(this._allIp).length;
+                        gamePlayer.isYao = false;
+                        break;
+                    }
+                }
                 str += "\n游戏结束";
             }
 
