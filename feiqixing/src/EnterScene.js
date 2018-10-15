@@ -65,6 +65,10 @@ var EnterLayer = cc.Layer.extend({
         this._room.updateRoom(ips);
     },
 
+    startGame: function () {
+        this._room.startGame();
+    },
+
     // 本机ip
     getMyIp: function (ip) {
         this.myIp = ip;

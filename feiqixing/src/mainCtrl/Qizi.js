@@ -76,7 +76,7 @@ var Qizi = ccui.Button.extend({
     },
 
     doOpp: function (sender) {
-        MainScene.instance.send_targetQizi(this);
+        MainLayer.instance.send_targetQizi(this);
 
         return;
         // 是否可操作
@@ -226,7 +226,7 @@ var Qizi = ccui.Button.extend({
             this.setQiziStatu(EventCost.QiziStatu.WAIT);
             MainLayer.instance.showRoll();
 
-            MainScene.instance.send_moveEnd();
+            MainLayer.instance.send_moveEnd();
         }
     },
 

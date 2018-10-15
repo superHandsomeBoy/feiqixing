@@ -74,7 +74,7 @@ var MainLayer = cc.Node.extend({
             var index = str[1];
             var num   = str[2];
             if(gamePlayer.playerId == ip){
-                this._nowMoveKey = color[gamePlayer.color];
+                this._nowMoveKey = gamePlayer.color;
                 if(this._allQizi[this._nowMoveKey]){
                     this._allQizi[this._nowMoveKey][index].checkIsCanMove(num, false);
                 }
@@ -85,8 +85,8 @@ var MainLayer = cc.Node.extend({
         // 播放摇色字
         EventDispatcher.shared().addListener(SVRCMD.yaoSeZi, function (cmd, data) {
             this._diceNum = data;
-            self.showSeziAni();
-            self.schedule(self.sche_SeziAni, 0.1);
+            this.showSeziAni();
+            this.schedule(this.sche_SeziAni, 0.1);
 
         }, this);
 
@@ -95,6 +95,7 @@ var MainLayer = cc.Node.extend({
             for(var i = 0; i < this._allIp.length; i++){
                 if(gamePlayer.playerId == data){
                     this._nowMoveKey = gamePlayer.color;
+                    this.showTips("color now " + gamePlayer.color);
                     break;
                 }
             }
@@ -105,12 +106,11 @@ var MainLayer = cc.Node.extend({
 
     // 开始摇色字
     send_startSezi:function(){
-        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "startSezi", "()V",);
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "startSezi", "()V");
     },
 
     // 发送指定棋子
     send_targetQizi:function(obj){
-        var str = "";
         var ip = gamePlayer.playerId;
         var num = this._diceNum;
         var index = obj.getIndex();
@@ -121,8 +121,8 @@ var MainLayer = cc.Node.extend({
 
     // 发送移动结束
     send_moveEnd:function(){
-        var ip = gamePlayer.playerId;
-        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetMoveEnd", "(Ljava/lang/String;)V", ip);
+        // var ip = gamePlayer.playerId;
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetMoveEnd", "()V");
     },
 
     joinPlay:function(arr){
@@ -298,6 +298,7 @@ var MainLayer = cc.Node.extend({
             cc.log("没有可操作的，跳过");
             this.showTips("没有可操作的,需要摇到" + EventCost.birthNum.toString() + "进行起飞");
             this.showRoll();
+            this.send_moveEnd();
         }else{
             this.setDoit(this._nowMoveKey, true);
             this.showTips("选择一个控制移动");
