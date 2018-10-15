@@ -73,13 +73,16 @@ var MainLayer = cc.Node.extend({
             var ip    = str[0];
             var index = str[1];
             var num   = str[2];
-            if(gamePlayer.playerId == ip){
-                this._nowMoveKey = gamePlayer.color;
-                if(this._allQizi[this._nowMoveKey]){
-                    this._allQizi[this._nowMoveKey][index].checkIsCanMove(num, false);
+            for(var i = 0; i < this._allIp.length; i++){
+                if(this._allIp[i].ip == ip){
+                    this._nowMoveKey = this._allIp[i].color;
+                    if(this._allQizi[this._nowMoveKey]){
+                        this._allQizi[this._nowMoveKey][index].checkIsCanMove(num, false);
+                    }
+                    break;
                 }
-
             }
+
         }, this);
 
         // 播放摇色字
@@ -93,9 +96,9 @@ var MainLayer = cc.Node.extend({
         // 开始游戏时，优先得到数据 第一个的玩家ip
         EventDispatcher.shared().addListener(SVRCMD.startMoveIp, function (cmd, data) {
             for(var i = 0; i < this._allIp.length; i++){
-                if(gamePlayer.playerId == data){
-                    this._nowMoveKey = gamePlayer.color;
-                    this.showTips("color now " + gamePlayer.color);
+                if(this._allIp[i].ip == data){
+                    this._nowMoveKey = data.color;
+                    this.showTips("color now " + this._allIp[i].color);
                     break;
                 }
             }
@@ -134,8 +137,13 @@ var MainLayer = cc.Node.extend({
             if (!arr[j])
                 continue;
 
-            this._allIp.push(arr[j]);
             var info = list[j];
+            var obj = {};
+            obj.color = info.color;
+            obj.ip = arr[j];
+
+            this._allIp.push(obj);
+
             this._allQizi[info.color] = {};
             this._allColor[info.color] = 1;
 
