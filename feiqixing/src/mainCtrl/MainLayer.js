@@ -115,8 +115,9 @@ var MainLayer = cc.Node.extend({
 
         // 游戏结束
         EventDispatcher.shared().addListener(SVRCMD.gameRank, function (cmd, data) {
+            var arr = data.split(",");
             var str = "";
-            for(var i = 0; i < data.length; i++){
+            for(var i = 0; i < arr.length; i++){
                 if(gamePlayer.playerId == data[i]){
                     gamePlayer.rank = (i + 1);
                     str += "ip:" + gamePlayer.playerId + ",rank:" + gamePlayer.rank;
