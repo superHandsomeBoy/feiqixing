@@ -48,7 +48,7 @@ var MainLayer = cc.Node.extend({
         this._dicesAni = false;
         this._allQizi = {};
         this._allColor = {};
-        this._allIp = [];
+        this._allIp = {};
         this._nowMoveKey = "red";
         this._diceNum = 0;
         this.initMap();
@@ -73,16 +73,11 @@ var MainLayer = cc.Node.extend({
             var ip    = str[0];
             var index = str[1];
             var num   = str[2];
-            for(var i = 0; i < this._allIp.length; i++){
-                if(this._allIp[i].ip == ip){
-                    this._nowMoveKey = this._allIp[i].color;
-                    if(this._allQizi[this._nowMoveKey]){
-                        this._allQizi[this._nowMoveKey][index].checkIsCanMove(num, false);
-                    }
-                    break;
-                }
-            }
 
+            this._nowMoveKey = this._allIp[ip];
+            if(this._allQizi[this._nowMoveKey]){
+                this._allQizi[this._nowMoveKey][index].checkIsCanMove(num, false);
+            }
         }, this);
 
         // 播放摇色字
@@ -95,13 +90,8 @@ var MainLayer = cc.Node.extend({
 
         // 开始游戏时，优先得到数据 第一个的玩家ip
         EventDispatcher.shared().addListener(SVRCMD.startMoveIp, function (cmd, data) {
-            for(var i = 0; i < this._allIp.length; i++){
-                if(this._allIp[i].ip == data){
-                    this._nowMoveKey = data.color;
-                    this.showTips("color now " + this._allIp[i].color);
-                    break;
-                }
-            }
+            this._nowMoveKey = this._allIp[data];
+            this.showTips("color now " + this._allIp[i].color);
         }, this);
 
     },
@@ -138,11 +128,8 @@ var MainLayer = cc.Node.extend({
                 continue;
 
             var info = list[j];
-            var obj = {};
-            obj.color = info.color;
-            obj.ip = arr[j];
 
-            this._allIp.push(obj);
+            this._allIp[arr[j]] = info.color;
 
             this._allQizi[info.color] = {};
             this._allColor[info.color] = 1;
