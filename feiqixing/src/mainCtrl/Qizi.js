@@ -15,10 +15,6 @@ var Qizi = ccui.Button.extend({
     // 序号
     _index:null,
 
-    // 是否可操作
-    _isDoIt:null,
-
-
     ctor:function (data, index) {
 
         this._data = data;
@@ -27,7 +23,6 @@ var Qizi = ccui.Button.extend({
         sp = cc.formatStr(sp, this._data.color);
         var texType = ccui.Widget.PLIST_TEXTURE;
         this._super(sp, sp, sp, texType);
-        this._isDoIt = false;
 
         this.addTouch();
 
@@ -42,16 +37,6 @@ var Qizi = ccui.Button.extend({
     getDefaultPoint:function(){
       var pos = this._index  * 2;
       return [this._data.init[pos - 2], this._data.init[pos - 1]];
-    },
-
-
-    setDoit:function( doit ){
-        this._isDoIt =  doit;
-    },
-
-
-    isDoit:function(){
-        return this._isDoIt;
     },
 
     addTouch: function () {
@@ -76,13 +61,9 @@ var Qizi = ccui.Button.extend({
     },
 
     doOpp: function (sender) {
-        MainLayer.instance.send_targetQizi(this);
-
-        return;
-        // 是否可操作
-        if(!this._isDoIt){
+        if (!gamePlayer.isYao)
             return;
-        }
+        MainLayer.instance.send_targetQizi(this);
     },
 
     // 出发点

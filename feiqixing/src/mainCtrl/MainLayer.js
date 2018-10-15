@@ -101,6 +101,43 @@ var MainLayer = cc.Node.extend({
             }
         }, this);
 
+
+        // 开始游戏时，优先得到数据 第一个的玩家ip
+        EventDispatcher.shared().addListener(SVRCMD.startMoveIp, function (cmd, data) {
+            this._nowMoveKey = this._allIp[data];
+            this.showTips("color now " + this._nowMoveKey);
+
+            gamePlayer.isYao = false;
+            if (data == gamePlayer.playerId) {
+                gamePlayer.isYao = true;
+            }
+        }, this);
+
+        // 游戏结束
+        EventDispatcher.shared().addListener(SVRCMD.gameRank, function (cmd, data) {
+            var arr = data.split(",");
+            var str = "";
+            for(var i = 0; i < arr.length; i++){
+                if(gamePlayer.playerId == data[i]){
+                    gamePlayer.rank = (i + 1);
+                    str += "ip:" + gamePlayer.playerId + ",rank:" + gamePlayer.rank;
+                    gamePlayer.isYao = false;
+                }
+            }
+            if(arr.length == Object.keys(this._allIp).length - 1){
+                for(var i = 0; i < arr.length; i++){
+                    if(!gamePlayer.rank){
+                        gamePlayer.rank = Object.keys(this._allIp).length;
+                        gamePlayer.isYao = false;
+                        break;
+                    }
+                }
+                str += "\n游戏结束";
+            }
+
+            this.showTips(str);
+        }, this);
+
     },
 
 
@@ -123,6 +160,12 @@ var MainLayer = cc.Node.extend({
     send_moveEnd:function(){
         // var ip = gamePlayer.playerId;
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetMoveEnd", "()V");
+    },
+
+    // 发送结束
+    send_myOver:function(){
+        var ip = gamePlayer.playerId;
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "myOver", "(Ljava/lang/String;)V", ip);
     },
 
     joinPlay:function(arr){
@@ -287,11 +330,9 @@ var MainLayer = cc.Node.extend({
             说明当前可以移动的色字只有一个并且摇到的非出生数字，系统自动移动
          */
 
-        this.setDoit(this._nowMoveKey, false);
 
         if(this.isBirthNum() && haveBirth > 0){
             // 自行选择
-            this.setDoit(this._nowMoveKey, true);
             this.showTips("可以控制新的出生或可以控制其他移动");
         }else if(autoMoveTimes == 1){
             // moveObj.checkIsCanMove(this._diceNum,false);
@@ -302,7 +343,6 @@ var MainLayer = cc.Node.extend({
             this.showRoll();
             this.send_moveEnd();
         }else{
-            this.setDoit(this._nowMoveKey, true);
             this.showTips("选择一个控制移动");
         }
     },
@@ -312,12 +352,6 @@ var MainLayer = cc.Node.extend({
             return;
         }
         this._tipsTxt.setString(txt);
-    },
-
-    setDoit:function(key, b){
-        for(var i in this._allQizi[key]){
-            this._allQizi[key][i].setDoit(b);
-        }
     },
 
     // 是否为出生数字
@@ -367,7 +401,7 @@ var MainLayer = cc.Node.extend({
         if(isOver){
             var msg = "游戏结束,%s色棋子优先全部到达;";
             cc.log(cc.formatStr(msg, color));
-            this._gameStatu = EventCost.Game_State.end;
+            this.send_myOver();
         }
     },
 
