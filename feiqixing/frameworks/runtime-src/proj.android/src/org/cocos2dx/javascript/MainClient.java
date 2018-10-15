@@ -99,6 +99,8 @@ public class MainClient {
     		AppActivity.app.showStep(str);
     	} else if (type.equals("07")) {		// 选择行走棋子
     		AppActivity.app.moveSeZiOpp(str);
+    	} else if (type.equals("09")) {		// 玩家结束数组
+    		AppActivity.app.playerWin(str);
     	}
 	}
 }

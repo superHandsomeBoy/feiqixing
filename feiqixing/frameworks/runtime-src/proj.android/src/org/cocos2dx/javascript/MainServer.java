@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import android.R.integer;
+
 public class MainServer {
 
 	public static MainServer app;
@@ -16,6 +18,7 @@ public class MainServer {
     private String _serverIp;
     private ArrayList<String> _allIps = new ArrayList<String>();
     private ArrayList<String> _allPlayers = new ArrayList<String>();
+    private ArrayList<String> _winPlayers = new ArrayList<String>();
     private ArrayList<PrintWriter> pWriters = new ArrayList<PrintWriter>();
     
     private Boolean isStart = false;	// 开始游戏
@@ -114,6 +117,20 @@ public class MainServer {
     	sendToCilent("02" + ips);
     };
     
+    // 发送 更新房间人员
+    public void updateWinPlayers() {
+    	String ips = "";
+    	int len = _winPlayers.size();
+    	for(int i = 0; i < len; i++) {
+    		ips += _winPlayers.get(i);
+    		if (i < len - 1) {
+    			ips += ",";
+    		}
+    	}
+    	
+    	sendToCilent("09" + ips);
+    };
+    
     // 显示当前行动者
     private void showNowPlayer() {
     	String ip = _allPlayers.get(indexNow);
@@ -205,6 +222,21 @@ public class MainServer {
     		sendToCilent("07" + str);
     	} else if (type.equals("08")) {		// 行走结束
     		showNowPlayer();
+    	} else if (type.equals("09")) {		// 某玩家结束
+    		_winPlayers.add(str);
+    		
+    		int len = _allPlayers.size();
+    		for(int i = 0; i < len; i++) {
+    			if (_allPlayers.get(i) == str) {
+    				_allPlayers.remove(i);
+    				if (indexNow > 0) {
+    					indexNow--;
+    				}
+    				break;
+    			}
+    		}
+    		
+    		updateWinPlayers();
     	}
 	}
 }
