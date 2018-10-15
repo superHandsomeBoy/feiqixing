@@ -92,9 +92,14 @@ var Qizi = ccui.Button.extend({
 
         this.setQiziStatu(EventCost.QiziStatu.WAIT);
         MainLayer.instance.showRoll();
+
+        MainLayer.instance.send_moveEnd();
     },
 
     checkIsCanMove:function(num, isBack){
+        if (!gamePlayer.isYao)
+            return;
+
         // 如果是在飞机场上，则出来
         if(this._statu == EventCost.QiziStatu.BIRTH && MainLayer.instance.isBirthNum()){
             this.initBirth();

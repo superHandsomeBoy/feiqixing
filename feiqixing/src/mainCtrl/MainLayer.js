@@ -65,6 +65,7 @@ var MainLayer = cc.Node.extend({
 
         // 指定颜色操作
         EventDispatcher.shared().addListener(SVRCMD.moveSeZiOpp, function (cmd, data) {
+
             var str = data.split(",");
 
             var ip    = str[0];
@@ -74,6 +75,10 @@ var MainLayer = cc.Node.extend({
             this._nowMoveKey = this._allIp[ip];
             if(this._allQizi[this._nowMoveKey]){
                 this._allQizi[this._nowMoveKey][index].checkIsCanMove(num, false);
+            }
+            gamePlayer.isYao = false;
+            if (ip == gamePlayer.playerId) {
+                gamePlayer.isYao = true;
             }
         }, this);
 
@@ -88,7 +93,12 @@ var MainLayer = cc.Node.extend({
         // 开始游戏时，优先得到数据 第一个的玩家ip
         EventDispatcher.shared().addListener(SVRCMD.startMoveIp, function (cmd, data) {
             this._nowMoveKey = this._allIp[data];
-            this.showTips("color now " + this._allIp[i].color);
+            this.showTips("color now " + this._nowMoveKey);
+
+            gamePlayer.isYao = false;
+            if (data == gamePlayer.playerId) {
+                gamePlayer.isYao = true;
+            }
         }, this);
 
     },
@@ -102,10 +112,10 @@ var MainLayer = cc.Node.extend({
     // 发送指定棋子
     send_targetQizi:function(obj){
         var ip = gamePlayer.playerId;
-        var num = this._diceNum;
         var index = obj.getIndex();
+        var num = this._diceNum;
 
-        var str = ip + "," + num + "," + index;
+        var str = ip + "," + index + "," + num;
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetQizi", "(Ljava/lang/String;)V", str);
     },
 
@@ -187,7 +197,8 @@ var MainLayer = cc.Node.extend({
                 return false;
             },
             onTouchEnded: function (touch, event) {
-                if(clickDice && !self._dicesAni && self._diceNum == 0){
+                cc.log(clickDice + "..." + self._dicesAni);
+                if(clickDice && !self._dicesAni && gamePlayer.isYao){
                     self.showTips("");
                     self._dicesAni = true;
                     self.send_startSezi();
@@ -226,7 +237,7 @@ var MainLayer = cc.Node.extend({
 
     // 显示摇色字的那面
     showRoll:function(){
-        this.showTargetSezi(0);
+        // this.showTargetSezi(0);
     },
 
 

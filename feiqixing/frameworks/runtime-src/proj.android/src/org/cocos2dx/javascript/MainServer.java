@@ -196,8 +196,7 @@ public class MainServer {
     		if (num != 6) {
 	    		indexNow++;
 	    		
-    			String ip = _allPlayers.get(indexNow);
-    	    	if (ip.isEmpty()) {
+    	    	if (indexNow >= _allPlayers.size()) {
     	    		indexNow = 0;
     	    	}
     		}
