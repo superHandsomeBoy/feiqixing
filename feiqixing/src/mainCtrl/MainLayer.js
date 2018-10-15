@@ -114,14 +114,16 @@ var MainLayer = cc.Node.extend({
         }, this);
 
         // 游戏结束
-        EventDispatcher.shared().addListener(SVRCMD.gameOver, function (cmd, data) {
-            this._gameStatu = EventCost.Game_State.end;
+        EventDispatcher.shared().addListener(SVRCMD.gameRank, function (cmd, data) {
             var str = "";
-            for(var i = 0; i < data.length(); i++){
+            for(var i = 0; i < data.length; i++){
                 if(gamePlayer.playerId == data[i]){
-                    gamePlayer.rank = i;
-                    str += "ip:" + gamePlayer.playerId + ",rank:" + i;
+                    gamePlayer.rank = (i + 1);
+                    str += "ip:" + gamePlayer.playerId + ",rank:" + gamePlayer.rank;
                 }
+            }
+            if(data.length == Object.keys(this._allIp).length){
+                str += "\n游戏结束";
             }
 
             this.showTips(str);

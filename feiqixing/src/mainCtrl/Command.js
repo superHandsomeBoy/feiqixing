@@ -7,5 +7,5 @@ var SVRCMD = {
     yaoSeZi: "yaoSeZi",             // 摇色字
     startMoveIp: "startMoveIp",     // 开始游戏时，优先走的玩家ip
     myOver: "myOver",               // 全部到终点了
-    gameOver: "gameOver",           // 游戏结束
+    gameRank: "gameRank",           // 游戏结束
 };
