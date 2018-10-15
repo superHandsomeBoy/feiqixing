@@ -120,6 +120,7 @@ var MainLayer = cc.Node.extend({
                 if(gamePlayer.playerId == data[i]){
                     gamePlayer.rank = (i + 1);
                     str += "ip:" + gamePlayer.playerId + ",rank:" + gamePlayer.rank;
+                    gamePlayer.isYao = false;
                 }
             }
             if(data.length == Object.keys(this._allIp).length){
