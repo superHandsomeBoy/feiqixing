@@ -118,7 +118,7 @@ var MainLayer = cc.Node.extend({
             var arr = data.split(",");
             var str = "";
             for(var i = 0; i < arr.length; i++){
-                if(gamePlayer.playerId == data[i]){
+                if(gamePlayer.playerId == arr[i]){
                     gamePlayer.rank = (i + 1);
                     str += "ip:" + gamePlayer.playerId + ",rank:" + gamePlayer.rank;
                     gamePlayer.isYao = false;
