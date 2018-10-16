@@ -33,6 +33,9 @@ var MainLayer = cc.Node.extend({
     // 选择移动倒计时
     _time:null,
 
+    // 发送消息中
+    _sending: false,
+
     _allIp:null,
 
     ctor:function () {
@@ -65,6 +68,7 @@ var MainLayer = cc.Node.extend({
 
         // 指定颜色操作
         EventDispatcher.shared().addListener(SVRCMD.moveSeZiOpp, function (cmd, data) {
+            this._sending = false;
 
             var str = data.split(",");
 
@@ -84,6 +88,7 @@ var MainLayer = cc.Node.extend({
 
         // 播放摇色字
         EventDispatcher.shared().addListener(SVRCMD.yaoSeZi, function (cmd, data) {
+            this._sending = false;
             this._diceNum = data;
             this.showSeziAni();
             this.schedule(this.sche_SeziAni, 0.1);
@@ -92,18 +97,8 @@ var MainLayer = cc.Node.extend({
 
         // 开始游戏时，优先得到数据 第一个的玩家ip
         EventDispatcher.shared().addListener(SVRCMD.startMoveIp, function (cmd, data) {
-            this._nowMoveKey = this._allIp[data];
-            this.showTips("color now " + this._nowMoveKey);
-
-            gamePlayer.isYao = false;
-            if (data == gamePlayer.playerId) {
-                gamePlayer.isYao = true;
-            }
-        }, this);
-
-
-        // 开始游戏时，优先得到数据 第一个的玩家ip
-        EventDispatcher.shared().addListener(SVRCMD.startMoveIp, function (cmd, data) {
+            this._sending = false;
+            this._diceNum = 0;
             this._nowMoveKey = this._allIp[data];
             this.showTips("color now " + this._nowMoveKey);
 
@@ -115,6 +110,7 @@ var MainLayer = cc.Node.extend({
 
         // 游戏结束
         EventDispatcher.shared().addListener(SVRCMD.gameRank, function (cmd, data) {
+            this._sending = false;
             var arr = data.split(",");
             var str = "";
             for(var i = 0; i < arr.length; i++){
@@ -143,11 +139,31 @@ var MainLayer = cc.Node.extend({
 
     // 开始摇色字
     send_startSezi:function(){
+        if (gamePlayer.color != this._nowMoveKey)
+            return;
+
+        if (this._sending)
+            return;
+        this._sending = true;
+
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "startSezi", "()V");
     },
 
     // 发送指定棋子
     send_targetQizi:function(obj){
+        if (gamePlayer.color != this._nowMoveKey)
+            return;
+
+        for(var i = 1; i <= 4; i++) {
+            if (this._allQizi[this._nowMoveKey][i].getStatu() == EventCost.QiziStatu.MOVE) {
+                cc.log("moving...");
+                return;
+            }
+        }
+        if (this._sending)
+            return;
+        this._sending = true;
+
         var ip = gamePlayer.playerId;
         var index = obj.getIndex();
         var num = this._diceNum;
@@ -158,12 +174,17 @@ var MainLayer = cc.Node.extend({
 
     // 发送移动结束
     send_moveEnd:function(){
-        // var ip = gamePlayer.playerId;
+        if (gamePlayer.color != this._nowMoveKey)
+            return;
+
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetMoveEnd", "()V");
     },
 
     // 发送结束
     send_myOver:function(){
+        if (gamePlayer.color != this._nowMoveKey)
+            return;
+
         var ip = gamePlayer.playerId;
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "myOver", "(Ljava/lang/String;)V", ip);
     },
@@ -340,7 +361,6 @@ var MainLayer = cc.Node.extend({
         }else if(autoMoveTimes <= 0){
             cc.log("没有可操作的，跳过");
             this.showTips("没有可操作的,需要摇到" + EventCost.birthNum.toString() + "进行起飞");
-            this.showRoll();
             this.send_moveEnd();
         }else{
             this.showTips("选择一个控制移动");

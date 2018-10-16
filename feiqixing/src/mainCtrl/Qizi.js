@@ -61,8 +61,13 @@ var Qizi = ccui.Button.extend({
     },
 
     doOpp: function (sender) {
-        if (!gamePlayer.isYao)
+        if (!gamePlayer.isYao || this._data.color != gamePlayer.color) {
             return;
+        }
+        if (MainLayer.instance._diceNum == 0) {
+            MainLayer.instance.showTips("请先摇筛子");
+            return;
+        }
         MainLayer.instance.send_targetQizi(this);
     },
 
@@ -70,16 +75,15 @@ var Qizi = ccui.Button.extend({
     initBirth:function(){
         this.setPosition(EventCost.switchPos(this._data.birth[0], this._data.birth[1]));
         this._curPox = this._data.birth;
+        gamePlayer.isYao = false;
 
         this.setQiziStatu(EventCost.QiziStatu.WAIT);
-        MainLayer.instance.showRoll();
 
+        cc.log("111111");
         MainLayer.instance.send_moveEnd();
     },
 
     checkIsCanMove:function(num, isBack){
-        if (!gamePlayer.isYao)
-            return;
 
         // 如果是在飞机场上，则出来
         if(this._statu == EventCost.QiziStatu.BIRTH && MainLayer.instance.isBirthNum()){
@@ -111,6 +115,7 @@ var Qizi = ccui.Button.extend({
             return;
         }
 
+        gamePlayer.isYao = false;
         this.setQiziStatu(EventCost.QiziStatu.MOVE);
 
         var times = --num;
@@ -122,6 +127,7 @@ var Qizi = ccui.Button.extend({
                 cc.log(cc.formatStr(msg, this._index, this._data.color));
 
                 this.setQiziStatu(EventCost.QiziStatu.END);
+                MainLayer.instance.send_moveEnd();
 
                 // 到达后检查是否游戏结束
                 MainLayer.instance.check(this._data.color);
@@ -210,8 +216,8 @@ var Qizi = ccui.Button.extend({
             this.runAction(cc.sequence(move, moveEndFunc));
         }else{
             this.setQiziStatu(EventCost.QiziStatu.WAIT);
-            MainLayer.instance.showRoll();
 
+            cc.log("2222222222");
             MainLayer.instance.send_moveEnd();
         }
     },
