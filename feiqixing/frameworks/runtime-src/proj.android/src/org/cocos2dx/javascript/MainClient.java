@@ -90,7 +90,7 @@ public class MainClient {
     	
     	if (type.equals("02")) {				// 更新房间成员
     		AppActivity.app.updateIps(str);
-    		
+
     	} else if (type.equals("04")) {		// 开始游戏
     		AppActivity.app.startGame();
     	} else if (type.equals("05")) {		// 显示当前行动者
@@ -100,6 +100,8 @@ public class MainClient {
     	} else if (type.equals("07")) {		// 选择行走棋子
     		AppActivity.app.moveSeZiOpp(str);
     	} else if (type.equals("09")) {		// 玩家结束数组
+    		AppActivity.app.playerWin(str);
+    	} else if (type.equals("10")) {		// 某玩家棋子被吃
     		AppActivity.app.playerWin(str);
     	}
 	}

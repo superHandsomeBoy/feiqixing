@@ -7,8 +7,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import android.R.integer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainServer {
 
@@ -23,6 +23,7 @@ public class MainServer {
     
     private Boolean isStart = false;	// 开始游戏
     private int indexNow = 0;
+    private Timer timer = null;
 	
 	public MainServer(String ip) {
 		app = this;
@@ -140,6 +141,32 @@ public class MainServer {
     	}
     	
     	sendToCilent("05" + ip);
+    	
+    	// 定时器
+    	if (timer == null) {
+    		timer = new Timer();
+    	} else {
+    		timer.purge();
+    	}
+    	timer.scheduleAtFixedRate(updateTime(), 0, AppActivity.MOVE_TIME * 1000);
+    }
+    
+    private TimerTask updateTime() {
+    	TimerTask task = new TimerTask() {
+			
+			@Override
+			public void run() {
+		    	timer.purge();
+		    	timer = null;
+
+		    	indexNow++;
+    	    	if (indexNow >= _allPlayers.size()) {
+    	    		indexNow = 0;
+    	    	}
+    	    	showNowPlayer();
+			}
+		};
+		return task;
     }
 	
 	// 解析收到的消息
@@ -220,8 +247,10 @@ public class MainServer {
     		
     	} else if (type.equals("07")) {		// 选择行走棋子
     		sendToCilent("07" + str);
+    		
     	} else if (type.equals("08")) {		// 行走结束
     		showNowPlayer();
+    		
     	} else if (type.equals("09")) {		// 某玩家结束
     		_winPlayers.add(str);
     		
@@ -237,6 +266,9 @@ public class MainServer {
     		}
     		
     		updateWinPlayers();
+    		
+    	} else if (type.equals("10")) {		// 某玩家棋子被吃
+    		sendToCilent("10" + str);
     	}
 	}
 }

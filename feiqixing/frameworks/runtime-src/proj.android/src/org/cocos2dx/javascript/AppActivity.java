@@ -44,6 +44,7 @@ public class AppActivity extends Cocos2dxActivity {
 	static AppActivity app = null;
     private static final String TAG = DeviceSearcher.class.getSimpleName();
     public static final int DEVICE_FIND_PORT = 9000;
+    public static final int MOVE_TIME = 10;
 
     private static DeviceWaitingSearch server0;
     private static MainServer server;
@@ -201,7 +202,7 @@ public class AppActivity extends Cocos2dxActivity {
     	app.runOnGLThread(new Runnable() {
  			@Override
  			public void run() {
- 				 Cocos2dxJavascriptJavaBridge.evalString("EnterScene.instance.startGame()");
+ 				 Cocos2dxJavascriptJavaBridge.evalString("EnterScene.instance.startGame('"+ MOVE_TIME +"')");
  			}
  		});
     }
@@ -278,6 +279,25 @@ public class AppActivity extends Cocos2dxActivity {
  			@Override
  			public void run() {
  				Cocos2dxJavascriptJavaBridge.evalString("EventDispatcher.shared().dispatchEvent('gameRank', '"+ ips +"')");
+ 			}
+ 		});
+    }
+    
+    // 某玩家棋子被吃
+    public static void eatList(final String str) {
+    	app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	client.sendToServer("10" + str);
+            }
+    	});
+    }
+    
+    public void playerIsEat(final String str) {
+    	app.runOnGLThread(new Runnable() {
+ 			@Override
+ 			public void run() {
+ 				Cocos2dxJavascriptJavaBridge.evalString("EventDispatcher.shared().dispatchEvent('eatList', '"+ str +"')");
  			}
  		});
     }
