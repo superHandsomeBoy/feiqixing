@@ -44,7 +44,8 @@ public class AppActivity extends Cocos2dxActivity {
 	static AppActivity app = null;
     private static final String TAG = DeviceSearcher.class.getSimpleName();
     public static final int DEVICE_FIND_PORT = 9000;
-    
+
+    private static DeviceWaitingSearch server0;
     private static MainServer server;
     private static MainClient client;
     public static String myIp;
@@ -141,13 +142,14 @@ public class AppActivity extends Cocos2dxActivity {
             	 server = new MainServer(myIp);
             	 client = new MainClient(myIp);
             	 
-                new DeviceWaitingSearch(app, "玩家1", "1号房"){
+            	 server0 = new DeviceWaitingSearch(app, "玩家1", "1号房"){
                     @Override
                     public void onDeviceSearched(InetSocketAddress socketAddr) {
                         //pushMsgToMain("已上线，搜索主机：" + socketAddr.getAddress().getHostAddress() + ":" + socketAddr.getPort());
                         Log.i(TAG, "已上线，搜索主机：" + socketAddr.getAddress().getHostAddress() + ":" + socketAddr.getPort());
                     }
-                }.start();
+                };
+                server0.start();
                 
 //                try {
 //					Thread.sleep(50);
@@ -189,6 +191,7 @@ public class AppActivity extends Cocos2dxActivity {
     	app.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+//            	server0.closeSocket();
             	client.sendToServer("04");
             }
     	});
@@ -258,6 +261,25 @@ public class AppActivity extends Cocos2dxActivity {
             	client.sendToServer("08");
             }
     	});
+    }
+    
+    // 某玩家结束
+    public static void myOver(final String ip) {
+    	app.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	client.sendToServer("09" + ip);
+            }
+    	});
+    }
+    
+    public void playerWin(final String ips) {
+    	app.runOnGLThread(new Runnable() {
+ 			@Override
+ 			public void run() {
+ 				Cocos2dxJavascriptJavaBridge.evalString("EventDispatcher.shared().dispatchEvent('gameRank', '"+ ips +"')");
+ 			}
+ 		});
     }
 
     /**

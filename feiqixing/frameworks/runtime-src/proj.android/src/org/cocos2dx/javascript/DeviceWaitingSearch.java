@@ -32,16 +32,17 @@ public abstract class DeviceWaitingSearch extends Thread {
 
     private Context mContext;
     private String deviceName, deviceRoom;
+    private DatagramSocket socket;
 
     public DeviceWaitingSearch(Context context, String name, String room) {
         mContext = context;
         deviceName = name;
         deviceRoom = room;
+        socket = null;
     }
 
     @Override
     public void run() {
-        DatagramSocket socket = null;
         try {
         	Log.i(TAG, "本机IP" + getOwnWifiIP());
 
@@ -57,7 +58,7 @@ public abstract class DeviceWaitingSearch extends Thread {
                     Log.i(TAG, "@@@zjun: 给主机回复信息");
                     socket.send(sendPack);
                     Log.i(TAG, "@@@zjun: 等待主机接收确认");
-                    socket.setSoTimeout(RECEIVE_TIME_OUT);
+//                    socket.setSoTimeout(RECEIVE_TIME_OUT);
                     try {
                         socket.receive(pack);
                         if (verifyCheckData(pack)) {
@@ -67,18 +68,23 @@ public abstract class DeviceWaitingSearch extends Thread {
                         }
                     } catch (SocketTimeoutException e) {
                     }
-//                    socket.setSoTimeout(0); // 连接超时还原成无穷大，阻塞式接收
-                    socket.close();
+                    socket.setSoTimeout(0); // 连接超时还原成无穷大，阻塞式接收
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+//        	System.out.println("server socket close....0");
             if (socket != null) {
                 socket.close();
                 System.out.println("server socket close....0");
             }
         }
+    }
+    
+    public void closeSocket() {
+    	socket.close();
+    	 System.out.println("server socket close....1");
     }
 
     /**
