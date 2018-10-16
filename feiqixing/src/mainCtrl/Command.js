@@ -8,4 +8,5 @@ var SVRCMD = {
     startMoveIp: "startMoveIp",     // 开始游戏时，优先走的玩家ip
     myOver: "myOver",               // 全部到终点了
     gameRank: "gameRank",           // 游戏结束
+    eatList : "eatList",            // 被吃的消息
 };

@@ -38,6 +38,11 @@ var MainLayer = cc.Node.extend({
 
     _allIp:null,
 
+    redOppColor:null,
+    greenOppColor:null,
+    yellowOppColor:null,
+    blueOppColor:null,
+
     ctor:function () {
         this._super();
 
@@ -100,11 +105,24 @@ var MainLayer = cc.Node.extend({
             this._sending = false;
             this._diceNum = 0;
             this._nowMoveKey = this._allIp[data];
+            this._time = EventCost.moveOppTime;
             this.showTips("color now " + this._nowMoveKey);
-
             gamePlayer.isYao = false;
             if (data == gamePlayer.playerId) {
                 gamePlayer.isYao = true;
+            }
+
+            this.changeOppColor(this._nowMoveKey);
+
+        }, this);
+
+        // 被吃的消息
+        EventDispatcher.shared().addListener(SVRCMD.eatList, function (cmd, data) {
+            for(var i = 0; i < data.length; i++){
+                var info = data[i];
+                if(this._allQizi[info.color]){
+                    this._allQizi[info.color][info.index].goHome();
+                }
             }
         }, this);
 
@@ -114,7 +132,7 @@ var MainLayer = cc.Node.extend({
             var arr = data.split(",");
             var str = "";
             for(var i = 0; i < arr.length; i++){
-                if(gamePlayer.playerId == data[i]){
+                if(gamePlayer.playerId == arr[i]){
                     gamePlayer.rank = (i + 1);
                     str += "ip:" + gamePlayer.playerId + ",rank:" + gamePlayer.rank;
                     gamePlayer.isYao = false;
@@ -134,6 +152,10 @@ var MainLayer = cc.Node.extend({
             this.showTips(str);
         }, this);
 
+
+
+        this._time.setString(EventCost.moveOppTime);
+        this.schedule(this.checkTimeOut, 1);
     },
 
 
@@ -147,6 +169,18 @@ var MainLayer = cc.Node.extend({
         this._sending = true;
 
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "startSezi", "()V");
+    },
+
+    // 发送吃的棋子
+    send_eatList:function(list){
+        if (gamePlayer.color != this._nowMoveKey)
+            return;
+
+        if (this._sending)
+            return;
+        this._sending = true;
+
+        jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "eatList", "(Ljava/lang/String;)V", list);
     },
 
     // 发送指定棋子
@@ -189,6 +223,20 @@ var MainLayer = cc.Node.extend({
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "myOver", "(Ljava/lang/String;)V", ip);
     },
 
+    changeOppColor:function(color){
+        var list = ["redOppColor", "blueOppColor", "greenOppColor", "yellowOppColor"];
+        for(var i = 0; i < list.length; i++){
+            if(this[list[i]]){
+                this[list[i]].visible = false;
+            }
+        }
+
+        if(this[color + "OppColor"]){
+            this[color + "OppColor"].visible = true;
+        }
+
+    },
+
     joinPlay:function(arr){
 
         var list = [EventCost.greenInfo, EventCost.blueInfo, EventCost.redInfo, EventCost.yellowInfo];
@@ -201,6 +249,11 @@ var MainLayer = cc.Node.extend({
             var info = list[j];
 
             this._allIp[arr[j]] = info.color;
+            var key = info.color + "OppColor";
+            this[key] =  new cc.LayerColor(info.color, 60, 60);
+            this[key].setPosition(30, WINSIZE.height - 60);
+            this.addChild(this[key]);
+            this[key].visible = false;
 
             this._allQizi[info.color] = {};
 
@@ -217,6 +270,7 @@ var MainLayer = cc.Node.extend({
         }
 
         gamePlayer.initPlayer(myColor, EnterScene.instance.myIp);
+
     },
 
     initSezi:function(){
@@ -239,6 +293,33 @@ var MainLayer = cc.Node.extend({
             if(i != 0){
                 dice.visible = false;
             }
+        }
+    },
+
+    // 检测吃棋子
+    checkEatQizi:function(x, y, color){
+        var pos = null;
+        var eatList = [];
+        for(var i in this._allQizi){
+
+            // 相同棋子跳过
+            if(i == color){
+                continue;
+            }
+
+            for(var j in this._allQizi[i]){
+                pos = this._allQizi[i].getCurPos();
+                if(pos[0] == x && pos[1] == y){
+                    var obj = {};
+                    obj.color = i;
+                    obj.index = j;
+                    eatList.push(obj);
+                }
+            }
+        }
+
+        if(eatList.length){
+            this.send_eatList(eatList.toString());
         }
     },
 
@@ -426,17 +507,6 @@ var MainLayer = cc.Node.extend({
     },
 
 
-    isGameOver:function(){
-        return this._gameStatu == EventCost.Game_State.end;
-    },
-
-
-    // 开始检查操作
-    starCheck:function(){
-        this._time.setString(EventCost.moveOppTime);
-        this.schedule(this.checkTimeOut, 1);
-    },
-
     // 检查操作计时
     checkTimeOut:function(){
         if(!this._time){
@@ -444,7 +514,6 @@ var MainLayer = cc.Node.extend({
         }
         var tt = this._time.getString() * 1;
         if(tt <= 0){
-            this.unschedule(this.checkTimeOut);
             return;
         }
         tt --;
