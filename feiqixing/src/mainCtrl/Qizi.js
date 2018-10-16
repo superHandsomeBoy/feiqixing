@@ -29,9 +29,22 @@ var Qizi = ccui.Button.extend({
         // 默认点
         var pos = this.getDefaultPoint();
         this.setPosition(EventCost.switchPos(pos[0], pos[1]));
-
+        this._curPox = pos;
 
         this.setQiziStatu(EventCost.QiziStatu.BIRTH);
+    },
+
+    goHome:function(){
+        var pos = this.getDefaultPoint();
+
+        var move = cc.moveTo(EventCost.QiziMoveTime, EventCost.switchPos(pos[0], pos[1]));
+        var callFun = cc.callFunc(function () {
+            this.setPosition(EventCost.switchPos(pos[0], pos[1]));
+            this.setQiziStatu(EventCost.QiziStatu.BIRTH);
+            this._curPox = pos;
+        }, this);
+
+        this.runAction(cc.sequence(move, callFun));
     },
 
     getDefaultPoint:function(){
@@ -133,6 +146,9 @@ var Qizi = ccui.Button.extend({
                 MainLayer.instance.check(this._data.color);
                 return;
             }
+
+            // 检查是否可以吃
+            MainLayer.instance.checkEatQizi(this._curPox[0],  this._curPox[1], this._data.color);
 
             // 优先检测是否可以飞
             this.checkFlyPoints( this._curPox[0],  this._curPox[1], 1, 1);
@@ -265,6 +281,10 @@ var Qizi = ccui.Button.extend({
 
     isEnd:function(){
         return this._statu == EventCost.QiziStatu.END;
+    },
+
+    getCurPos:function(){
+        return this._curPox;
     },
 
     onExit:function () {

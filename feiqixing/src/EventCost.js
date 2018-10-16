@@ -138,7 +138,7 @@ EventCost.Game_State.end = 1;
 EventCost.birthNum = [5, 6];
 
 // 操作时间
-EventCost.moveOppTime = 24;
+EventCost.moveOppTime = 10;
 
 // 将数组转化坐标
 EventCost.switchPos = function(x, y){

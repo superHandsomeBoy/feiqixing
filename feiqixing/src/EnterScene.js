@@ -65,7 +65,8 @@ var EnterLayer = cc.Layer.extend({
         this._room.updateRoom(ips);
     },
 
-    startGame: function () {
+    startGame: function (time) {
+        EventCost.moveOppTime = time;
         this._room.startGame();
     },
 
