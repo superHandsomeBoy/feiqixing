@@ -33,6 +33,7 @@ public abstract class DeviceWaitingSearch extends Thread {
     private Context mContext;
     private String deviceName, deviceRoom;
     private DatagramSocket socket;
+    private Boolean isStart = false;
 
     public DeviceWaitingSearch(Context context, String name, String room) {
         mContext = context;
@@ -52,23 +53,27 @@ public abstract class DeviceWaitingSearch extends Thread {
             while (true) {
                 // 等待搜索
                 socket.receive(pack);
+                
+                if (isStart) {	// 游戏已开始
+                	break;
+                }
                 if (verifySearchData(pack)) {
                     byte[] sendData = packData();
                     DatagramPacket sendPack = new DatagramPacket(sendData, sendData.length, pack.getAddress(), pack.getPort());
                     Log.i(TAG, "@@@zjun: 给主机回复信息");
                     socket.send(sendPack);
-                    Log.i(TAG, "@@@zjun: 等待主机接收确认");
+//                    Log.i(TAG, "@@@zjun: 等待主机接收确认");
 //                    socket.setSoTimeout(RECEIVE_TIME_OUT);
-                    try {
-                        socket.receive(pack);
-                        if (verifyCheckData(pack)) {
-                            Log.i(TAG, "@@@zjun: 确认成功 " + pack.getAddress().getHostAddress());
-                            onDeviceSearched((InetSocketAddress) pack.getSocketAddress());
-                            break;
-                        }
-                    } catch (SocketTimeoutException e) {
-                    }
-                    socket.setSoTimeout(0); // 连接超时还原成无穷大，阻塞式接收
+//                    try {
+//                        socket.receive(pack);
+//                        if (verifyCheckData(pack)) {
+//                            Log.i(TAG, "@@@zjun: 确认成功 " + pack.getAddress().getHostAddress());
+//                            onDeviceSearched((InetSocketAddress) pack.getSocketAddress());
+//                            break;
+//                        }
+//                    } catch (SocketTimeoutException e) {
+//                    }
+//                    socket.setSoTimeout(0); // 连接超时还原成无穷大，阻塞式接收
                 }
             }
         } catch (IOException e) {
@@ -83,8 +88,13 @@ public abstract class DeviceWaitingSearch extends Thread {
     }
     
     public void closeSocket() {
-    	socket.close();
-    	 System.out.println("server socket close....1");
+    	isStart = true;
+//    	if (socket != null) {
+//    		socket.close();
+//       	 	System.out.println("server socket close....1");
+//    	} else {
+//    	   	 System.out.println("server socket close....2");
+//    	}
     }
 
     /**

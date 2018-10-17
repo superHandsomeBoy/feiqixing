@@ -23,7 +23,10 @@ public class MainServer {
     
     private Boolean isStart = false;	// 开始游戏
     private int indexNow = 0;
-    private Timer timer = null;
+    public Timer timer = null;
+    private int _time = 0;
+    private int _num = 0;
+    private Boolean isEnd = false;	// 结束游戏
 	
 	public MainServer(String ip) {
 		app = this;
@@ -130,25 +133,35 @@ public class MainServer {
     	}
     	
     	sendToCilent("09" + ips);
+    	
+    	if (len >= _allPlayers.size() - 1) {
+    		isEnd = true;
+    		if (timer != null) {
+    			timer.cancel();
+    			timer = null;
+    		}
+    	}
     };
     
     // 显示当前行动者
-    private void showNowPlayer() {
+    private void showNowPlayer(Boolean isNext) {
+    	if (isNext || _num != 6) {
+    		indexNow++;
+    		
+	    	if (indexNow >= _allPlayers.size()) {
+	    		indexNow = 0;
+	    	}
+		}
     	String ip = _allPlayers.get(indexNow);
-    	if (ip.isEmpty()) {
-    		indexNow = 0;
-    		ip = _allPlayers.get(indexNow);
-    	}
     	
     	sendToCilent("05" + ip);
-    	
+
     	// 定时器
+		_time = AppActivity.MOVE_TIME;
     	if (timer == null) {
     		timer = new Timer();
-    	} else {
-    		timer.purge();
+        	timer.schedule(updateTime(), 0, 1000);
     	}
-    	timer.scheduleAtFixedRate(updateTime(), 0, AppActivity.MOVE_TIME * 1000);
     }
     
     private TimerTask updateTime() {
@@ -156,14 +169,11 @@ public class MainServer {
 			
 			@Override
 			public void run() {
-		    	timer.purge();
-		    	timer = null;
+				_time--;
+				if (_time > 0)
+					return;
 
-		    	indexNow++;
-    	    	if (indexNow >= _allPlayers.size()) {
-    	    		indexNow = 0;
-    	    	}
-    	    	showNowPlayer();
+    	    	showNowPlayer(true);
 			}
 		};
 		return task;
@@ -171,6 +181,11 @@ public class MainServer {
 	
 	// 解析收到的消息
 	private void checkMessage(String msg) {
+		if (isEnd) {
+			System.out.println("游戏结束...");
+			return;
+		}
+		
         System.out.println("server get msg: " + msg);
         
         String objString = msg.toString();
@@ -228,35 +243,28 @@ public class MainServer {
     		
     		try {
 				Thread.sleep(50);
-				showNowPlayer();
+				_num = 6;
+				showNowPlayer(false);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
     		
     	} else if (type.equals("06")) {		// 开始甩筛子
-    		int num = (int) Math.floor(Math.random() * 6) + 1;
-    		sendToCilent("06" + num);
-    		
-    		if (num != 6) {
-	    		indexNow++;
-	    		
-    	    	if (indexNow >= _allPlayers.size()) {
-    	    		indexNow = 0;
-    	    	}
-    		}
+    		_num = (int) Math.floor(Math.random() * 6) + 1;
+    		sendToCilent("06" + _num);
     		
     	} else if (type.equals("07")) {		// 选择行走棋子
     		sendToCilent("07" + str);
     		
     	} else if (type.equals("08")) {		// 行走结束
-    		showNowPlayer();
+    		showNowPlayer(false);
     		
     	} else if (type.equals("09")) {		// 某玩家结束
     		_winPlayers.add(str);
     		
     		int len = _allPlayers.size();
     		for(int i = 0; i < len; i++) {
-    			if (_allPlayers.get(i) == str) {
+    			if (_allPlayers.get(i).equals(str)) {
     				_allPlayers.remove(i);
     				if (indexNow > 0) {
     					indexNow--;

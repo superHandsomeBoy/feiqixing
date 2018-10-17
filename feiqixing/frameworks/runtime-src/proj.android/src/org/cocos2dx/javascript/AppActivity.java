@@ -44,11 +44,11 @@ public class AppActivity extends Cocos2dxActivity {
 	static AppActivity app = null;
     private static final String TAG = DeviceSearcher.class.getSimpleName();
     public static final int DEVICE_FIND_PORT = 9000;
-    public static final int MOVE_TIME = 10;
+    public static final int MOVE_TIME = 30;
 
     private static DeviceWaitingSearch server0;
-    private static MainServer server;
-    private static MainClient client;
+    private static MainServer server = null;
+    private static MainClient client = null;
     public static String myIp;
     
     private static ArrayList<String> _serverIps = new ArrayList<String>();
@@ -192,7 +192,7 @@ public class AppActivity extends Cocos2dxActivity {
     	app.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//            	server0.closeSocket();
+            	server0.closeSocket();
             	client.sendToServer("04");
             }
     	});
@@ -301,6 +301,15 @@ public class AppActivity extends Cocos2dxActivity {
  			}
  		});
     }
+	
+	@Override
+	protected void onDestroy() {
+		if (server != null && server.timer != null) {
+			server.timer.cancel();
+		}
+
+		super.onDestroy();
+	};
 
     /**
      * 获取本机在Wifi中的IP

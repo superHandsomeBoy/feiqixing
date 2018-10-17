@@ -92,7 +92,6 @@ var Qizi = ccui.Button.extend({
 
         this.setQiziStatu(EventCost.QiziStatu.WAIT);
 
-        cc.log("111111");
         MainLayer.instance.send_moveEnd();
     },
 
@@ -233,7 +232,8 @@ var Qizi = ccui.Button.extend({
         }else{
             this.setQiziStatu(EventCost.QiziStatu.WAIT);
 
-            cc.log("2222222222");
+            // 检查是否可以吃
+            MainLayer.instance.checkEatQizi(this._curPox[0],  this._curPox[1], this._data.color);
             MainLayer.instance.send_moveEnd();
         }
     },

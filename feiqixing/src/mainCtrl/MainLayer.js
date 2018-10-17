@@ -95,6 +95,7 @@ var MainLayer = cc.Node.extend({
         EventDispatcher.shared().addListener(SVRCMD.yaoSeZi, function (cmd, data) {
             this._sending = false;
             this._diceNum = data;
+            gamePlayer.yaoTimes = 0;
             this.showSeziAni();
             this.schedule(this.sche_SeziAni, 0.1);
 
@@ -105,11 +106,13 @@ var MainLayer = cc.Node.extend({
             this._sending = false;
             this._diceNum = 0;
             this._nowMoveKey = this._allIp[data];
-            this._time = EventCost.moveOppTime;
+            this._time.setString(EventCost.moveOppTime);
             this.showTips("color now " + this._nowMoveKey);
             gamePlayer.isYao = false;
+            gamePlayer.yaoTimes = 0;
             if (data == gamePlayer.playerId) {
                 gamePlayer.isYao = true;
+                gamePlayer.yaoTimes = 1;
             }
 
             this.changeOppColor(this._nowMoveKey);
@@ -118,6 +121,7 @@ var MainLayer = cc.Node.extend({
 
         // 被吃的消息
         EventDispatcher.shared().addListener(SVRCMD.eatList, function (cmd, data) {
+            data = JSON.parse(data);
             for(var i = 0; i < data.length; i++){
                 var info = data[i];
                 if(this._allQizi[info.color]){
@@ -134,15 +138,22 @@ var MainLayer = cc.Node.extend({
             for(var i = 0; i < arr.length; i++){
                 if(gamePlayer.playerId == arr[i]){
                     gamePlayer.rank = (i + 1);
-                    str += "ip:" + gamePlayer.playerId + ",rank:" + gamePlayer.rank;
                     gamePlayer.isYao = false;
                 }
+                str += "ip:" + arr[i] + ",rank:" + (i+1);
             }
+
             if(arr.length == Object.keys(this._allIp).length - 1){
-                for(var i = 0; i < arr.length; i++){
-                    if(!gamePlayer.rank){
-                        gamePlayer.rank = Object.keys(this._allIp).length;
-                        gamePlayer.isYao = false;
+                for(var j in this._allIp) {
+                    var had = false;
+                    for(var i = 0; i < arr.length; i++){
+                        if (j == arr[i]) {
+                            had = true;
+                            break;
+                        }
+                    }
+                    if (!had) {
+                        str += "ip:" + j + ",rank:" + arr.length - 1;
                         break;
                     }
                 }
@@ -249,8 +260,9 @@ var MainLayer = cc.Node.extend({
             var info = list[j];
 
             this._allIp[arr[j]] = info.color;
+
             var key = info.color + "OppColor";
-            this[key] =  new cc.LayerColor(info.color, 60, 60);
+            this[key] =  new cc.LayerColor(info.color2, 60, 60);
             this[key].setPosition(30, WINSIZE.height - 60);
             this.addChild(this[key]);
             this[key].visible = false;
@@ -308,7 +320,7 @@ var MainLayer = cc.Node.extend({
             }
 
             for(var j in this._allQizi[i]){
-                pos = this._allQizi[i].getCurPos();
+                pos = this._allQizi[i][j].getCurPos();
                 if(pos[0] == x && pos[1] == y){
                     var obj = {};
                     obj.color = i;
@@ -319,7 +331,7 @@ var MainLayer = cc.Node.extend({
         }
 
         if(eatList.length){
-            this.send_eatList(eatList.toString());
+            this.send_eatList(JSON.stringify(eatList));
         }
     },
 
@@ -343,7 +355,7 @@ var MainLayer = cc.Node.extend({
             },
             onTouchEnded: function (touch, event) {
                 cc.log(clickDice + "..." + self._dicesAni);
-                if(clickDice && !self._dicesAni && gamePlayer.isYao){
+                if(clickDice && !self._dicesAni && gamePlayer.isYao && gamePlayer.yaoTimes > 0){
                     self.showTips("");
                     self._dicesAni = true;
                     self.send_startSezi();

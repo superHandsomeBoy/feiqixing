@@ -98,13 +98,13 @@ EventCost.blueFlyPonit     = [12, 26, 24, 26];
 
 
 // 绿色信息
-EventCost.greenInfo  = {color:"green",  path: EventCost.greenPath,  birth:EventCost.greenBirthPoint,  init:EventCost.greenPoints,   jumpPoint: EventCost.greenJumpPonit,  flyPoint: EventCost.greenFlyPonit};
+EventCost.greenInfo  = {color:"green",  path: EventCost.greenPath,  birth:EventCost.greenBirthPoint,  init:EventCost.greenPoints,   jumpPoint: EventCost.greenJumpPonit,  flyPoint: EventCost.greenFlyPonit,    color2: cc.color.GREEN};
 // 红色信息
-EventCost.redInfo    = {color:"red",    path: EventCost.redPath,    birth:EventCost.redBirthPoint,    init:EventCost.redPoints,     jumpPoint: EventCost.redJumpPonit,    flyPoint: EventCost.redFlyPonit};
+EventCost.redInfo    = {color:"red",    path: EventCost.redPath,    birth:EventCost.redBirthPoint,    init:EventCost.redPoints,     jumpPoint: EventCost.redJumpPonit,    flyPoint: EventCost.redFlyPonit,      color2: cc.color.RED};
 // 黄色信息
-EventCost.yellowInfo = {color:"yellow", path: EventCost.yellowPath, birth:EventCost.yellowBirthPoint, init:EventCost.yellowPoints,  jumpPoint: EventCost.yellowJumpPonit, flyPoint: EventCost.yellowFlyPonit};
+EventCost.yellowInfo = {color:"yellow", path: EventCost.yellowPath, birth:EventCost.yellowBirthPoint, init:EventCost.yellowPoints,  jumpPoint: EventCost.yellowJumpPonit, flyPoint: EventCost.yellowFlyPonit,   color2: cc.color.YELLOW};
 // 蓝色信息
-EventCost.blueInfo   = {color:"blue",   path: EventCost.bluePath,   birth:EventCost.blueBirthPoint,   init:EventCost.bluePoints,    jumpPoint: EventCost.blueJumpPonit,   flyPoint: EventCost.blueFlyPonit};
+EventCost.blueInfo   = {color:"blue",   path: EventCost.bluePath,   birth:EventCost.blueBirthPoint,   init:EventCost.bluePoints,    jumpPoint: EventCost.blueJumpPonit,   flyPoint: EventCost.blueFlyPonit,     color2: cc.color.BLUE};
 
 
 // 棋子状态信息

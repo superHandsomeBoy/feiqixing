@@ -5,12 +5,14 @@ var Player = cc.Class.extend({
     over:null,
     rank:null,
     isYao: false,
+    yaoTimes: 0,
 
     ctor:function () {
         this.playerId = 0;
         this.color = "red";
         this.over = false;
         this.isYao = false;
+        this.yaoTimes = 0;
         this.rank = 0;
     },
     
