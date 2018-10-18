@@ -251,7 +251,7 @@ public class MainServer {
     		
     	} else if (type.equals("06")) {		// 开始甩筛子
     		_num = (int) Math.floor(Math.random() * 6) + 1;
-    		sendToCilent("06" + _num);
+    		sendToCilent("06" + _num + "," + _allPlayers.get(indexNow));
     		
     	} else if (type.equals("07")) {		// 选择行走棋子
     		sendToCilent("07" + str);

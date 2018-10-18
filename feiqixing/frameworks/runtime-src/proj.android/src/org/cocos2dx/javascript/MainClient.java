@@ -67,7 +67,7 @@ public class MainClient {
 	//向server发送消息
     public void sendToServer(String str) {
     	System.out.println("send to server: " + str + ", " + AppActivity.myIp);
-    	
+
     	pWriter.println(str);
     	pWriter.flush();
     }

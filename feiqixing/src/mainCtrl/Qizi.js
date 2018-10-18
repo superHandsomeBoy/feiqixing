@@ -91,8 +91,11 @@ var Qizi = ccui.Button.extend({
         gamePlayer.isYao = false;
 
         this.setQiziStatu(EventCost.QiziStatu.WAIT);
+        cc.log("::::出发点:::::");
 
-        MainLayer.instance.send_moveEnd();
+        if(this._data.color == gamePlayer.color){
+            MainLayer.instance.send_moveEnd();
+        }
     },
 
     checkIsCanMove:function(num, isBack){
@@ -139,7 +142,9 @@ var Qizi = ccui.Button.extend({
                 cc.log(cc.formatStr(msg, this._index, this._data.color));
 
                 this.setQiziStatu(EventCost.QiziStatu.END);
-                MainLayer.instance.send_moveEnd();
+                if(this._data.color == gamePlayer.color){
+                    MainLayer.instance.send_moveEnd();
+                }
 
                 // 到达后检查是否游戏结束
                 MainLayer.instance.check(this._data.color);
@@ -234,7 +239,10 @@ var Qizi = ccui.Button.extend({
 
             // 检查是否可以吃
             MainLayer.instance.checkEatQizi(this._curPox[0],  this._curPox[1], this._data.color);
-            MainLayer.instance.send_moveEnd();
+            cc.log("::::move over:::::::::");
+            if(this._data.color == gamePlayer.color){
+                MainLayer.instance.send_moveEnd();
+            }
         }
     },
 

@@ -38,6 +38,8 @@ var MainLayer = cc.Node.extend({
 
     _allIp:null,
 
+    _yaoSeziIp:null,
+
     redOppColor:null,
     greenOppColor:null,
     yellowOppColor:null,
@@ -94,7 +96,11 @@ var MainLayer = cc.Node.extend({
         // 播放摇色字
         EventDispatcher.shared().addListener(SVRCMD.yaoSeZi, function (cmd, data) {
             this._sending = false;
-            this._diceNum = data;
+            var str = data.split(",");
+
+            this._diceNum = str[0];
+            this._yaoSeziIp = str[1];
+
             gamePlayer.yaoTimes = 0;
             this.showSeziAni();
             this.schedule(this.sche_SeziAni, 0.1);
@@ -178,7 +184,8 @@ var MainLayer = cc.Node.extend({
         if (this._sending)
             return;
         this._sending = true;
-
+        cc.log(":::" + gamePlayer.playerId + ":::yaosezi:::::");
+        cc.log(gamePlayer.playerId + "send.......182");
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "startSezi", "()V");
     },
 
@@ -190,7 +197,7 @@ var MainLayer = cc.Node.extend({
         if (this._sending)
             return;
         this._sending = true;
-
+        cc.log(gamePlayer.playerId + "send.......194");
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "eatList", "(Ljava/lang/String;)V", list);
     },
 
@@ -212,7 +219,7 @@ var MainLayer = cc.Node.extend({
         var ip = gamePlayer.playerId;
         var index = obj.getIndex();
         var num = this._diceNum;
-
+        cc.log(gamePlayer.playerId + "send.......216");
         var str = ip + "," + index + "," + num;
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetQizi", "(Ljava/lang/String;)V", str);
     },
@@ -222,6 +229,13 @@ var MainLayer = cc.Node.extend({
         if (gamePlayer.color != this._nowMoveKey)
             return;
 
+
+        cc.log(":::yaoseziIp::::" + this._yaoSeziIp + ":::color:::" + this._allIp[this._yaoSeziIp] + "::::nowmovekey::::" + this._nowMoveKey);
+        if(this._allIp[this._yaoSeziIp] != this._nowMoveKey){
+            return;
+        }
+
+        cc.log(gamePlayer.playerId + "send.......225");
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "sendTargetMoveEnd", "()V");
     },
 
@@ -231,6 +245,7 @@ var MainLayer = cc.Node.extend({
             return;
 
         var ip = gamePlayer.playerId;
+        cc.log(gamePlayer.playerId + "send.......235");
         jsb.reflection.callStaticMethod("org/cocos2dx/javascript/AppActivity", "myOver", "(Ljava/lang/String;)V", ip);
     },
 
@@ -454,7 +469,10 @@ var MainLayer = cc.Node.extend({
         }else if(autoMoveTimes <= 0){
             cc.log("没有可操作的，跳过");
             this.showTips("没有可操作的,需要摇到" + EventCost.birthNum.toString() + "进行起飞");
-            this.send_moveEnd();
+
+            if(this._nowMoveKey == gamePlayer.color){
+                this.send_moveEnd();
+            }
         }else{
             this.showTips("选择一个控制移动");
         }
